@@ -42,6 +42,8 @@ class _SearchPageState extends State<SearchPage> {
       drawer:left_search_menu(),
 
       endDrawer: righ_search_menu(),
+
+
     );
   }
 }

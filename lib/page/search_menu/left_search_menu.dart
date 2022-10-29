@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:live_in/page/search_menu/taipei_district.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 
 //house
@@ -14,10 +15,8 @@ class _left_search_menuState extends State<left_search_menu> {
 
   List<dynamic> countries=[];
   List<dynamic> statesMasters=[];
-  List<dynamic> state=[];
 
   String? countryId;
-  String? stateID;
 
   @override
   void initState(){
@@ -38,14 +37,6 @@ class _left_search_menuState extends State<left_search_menu> {
   @override
   Widget build(BuildContext context) {
 
-    void area(){
-      if(countryId!=null){
-        var countryId_int=int.tryParse(countryId??"");
-        print(countryId_int);
-      }
-    }
-
-
     return  Container(
       width: 350,
       child:Drawer(
@@ -53,6 +44,7 @@ class _left_search_menuState extends State<left_search_menu> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
+
               Container(
                 color: const Color.fromRGBO(126,214,223,1),
                 height: 80,
@@ -61,14 +53,20 @@ class _left_search_menuState extends State<left_search_menu> {
 
               ),
               Container(
-                color: Colors.redAccent,
-                height: 250,
+                height: 100,
+                decoration: const BoxDecoration(
+                  color:  Color.fromRGBO(236,240,241,1)//rgba(236, 240, 241,1.0)
+                  // border: Border(
+                  //   top: BorderSide(width: 2),
+                  //   bottom: BorderSide(width: 2),
+                 // )
+                ),
                 child: Column(
                   children: [
                     FormHelper.dropDownWidgetWithLabel(
-                      labelFontSize:30,
+                      labelFontSize:15,
                       context,
-                      "Century",
+                      "縣市/County",
                       "Select Country",
                       this.countryId,
                       this.countries,
@@ -76,16 +74,7 @@ class _left_search_menuState extends State<left_search_menu> {
                         this.countryId=onChangedVal;
                         print("Selected Country:$onChangedVal");
 
-                        this.state=this.
-                        statesMasters.
-                        where(
-                              (stateItem)=>
-                          stateItem["ParentId"].toString()==
-                              onChangedVal.toString(),
-                        ).toList();
-                        this.stateID=null;
                         setState(() { });
-
                       },
                           (onChangedVal){
                         if(onChangedVal==null){
@@ -99,39 +88,19 @@ class _left_search_menuState extends State<left_search_menu> {
 
                       //optionValue: "id",
                       //optionLabel: "name"
+
                     ),
-                      Container(
-                        height: 100,
-                        child: TextField(
-                          onChanged: (text) {
-                            print('First text field: $text');
-                          },
-                        ),
-                      ),
-
-
-                    // FormHelper.dropDownWidgetWithLabel(
-                    //     context,
-                    //     "State",
-                    //     "select state",
-                    //     this.stateID,
-                    //     this.state,
-                    //         (onChangedVal){
-                    //       this.stateID=onChangedVal;
-                    //       print("select state$onChangedVal");
-                    //     },
-                    //         (onValidate){
-                    //       return null;
-                    //     },
-                    //     borderColor:Theme.of(context).primaryColor,
-                    //     borderFocusColor:Theme.of(context).primaryColor,
-                    //     borderRadius: 10,
-                    //     optionValue: "ID",
-                    //     optionLabel: "Name"
-                    // )
                   ],
                 ),
               ),
+              if(countryId=='1')
+                taipeiDistrict(),
+
+
+              Container(
+                color: Color.fromRGBO(236,240,241,1),
+                height: 500,
+              )
             ],
           ),
         ),

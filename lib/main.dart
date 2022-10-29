@@ -7,7 +7,7 @@ import 'package:live_in/page/infoPage.dart';
 import 'page/HomePage.dart';
 import 'page/SearchPage.dart';
 //test
-
+//testoop
 
 
 void main()=>runApp(MaterialApp(title: 'app',
