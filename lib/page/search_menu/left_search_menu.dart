@@ -4,7 +4,12 @@ import 'package:live_in/page/search_menu/taipei_district.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:getwidget/getwidget.dart';
 
-//house
+import 'package:flutter/material.dart';
+import 'package:snippet_coder_utils/FormHelper.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:developer';
+import 'package:json_annotation/json_annotation.dart';
 
 class left_search_menu extends StatefulWidget {
   const left_search_menu({Key? key}) : super(key: key);
@@ -12,7 +17,23 @@ class left_search_menu extends StatefulWidget {
   @override
   State<left_search_menu> createState() => _left_search_menuState();
 }
+class User {
+  String name;
+  int age;
+  String name1;
+  int age1;
 
+  User({required this.name, required this.age,required this.name1,required this.age1});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'age': age,
+      'name1':name1,
+      'age1':age1
+    };
+  }
+}
 class _left_search_menuState extends State<left_search_menu> {
 
   List<dynamic> countries=[];
@@ -31,23 +52,21 @@ class _left_search_menuState extends State<left_search_menu> {
 
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     this.countries.add({"id":1,"name":"台北"});
     this.countries.add({"id":2,"name":"新北"});
   }
 
   @override
-  Widget build(BuildContext context) {
-
-    return  Container(
+  Widget build(BuildContext context)  {
+    return Container(
       width: 350,
-      child:Drawer(
+      child: Drawer(
         child: Container(
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-
               Container(
                 color: const Color.fromRGBO(147,197,253,1),
                 height: 80,
