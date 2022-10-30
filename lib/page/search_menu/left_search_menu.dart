@@ -4,12 +4,6 @@ import 'package:live_in/page/search_menu/taipei_district.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:getwidget/getwidget.dart';
 
-import 'package:flutter/material.dart';
-import 'package:snippet_coder_utils/FormHelper.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:developer';
-import 'package:json_annotation/json_annotation.dart';
 
 class left_search_menu extends StatefulWidget {
   const left_search_menu({Key? key}) : super(key: key);
