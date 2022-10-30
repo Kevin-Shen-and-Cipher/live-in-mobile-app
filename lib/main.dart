@@ -36,7 +36,7 @@ class _MainPageState extends State<MainPage> {
       body: screens[currentIndex],
       bottomNavigationBar:BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Color.fromRGBO(126,214,223,1),//rgba(126, 214, 223,1.0)
+        backgroundColor: Color.fromRGBO(147,197,253,1),//rgba(126, 214, 223,1.0)
         selectedItemColor: Colors.white,
         iconSize: 30,
         showUnselectedLabels: false,

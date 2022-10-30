@@ -40,6 +40,7 @@ dependencies:
   carousel_slider: ^4.1.1
   dropdown_button_plus: 0.0.2
   snippet_coder_utils: ^1.0.12
+  getwidget: ^2.0.4
 
 dev_dependencies:
   flutter_test:

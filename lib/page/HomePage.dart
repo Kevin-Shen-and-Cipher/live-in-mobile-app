@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: Text('LiveIn',),
           centerTitle: true,
-          backgroundColor: Color.fromRGBO(126,214,223,1),
+          backgroundColor: Color.fromRGBO(147,197,253,1),
         ),
         body:Center(
           child: Container(
