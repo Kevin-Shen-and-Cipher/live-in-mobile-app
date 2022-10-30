@@ -124,7 +124,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children:  [
-                      Text(
+                      const Text(
                         "職業",
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
