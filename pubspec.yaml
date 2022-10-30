@@ -31,6 +31,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  json_serializable: ^6.5.4
+  built_value: ^8.4.2
 
 
 

@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:live_in/page/search_menu/taipei_district.dart';
-import 'package:snippet_coder_utils/FormHelper.dart';
 
-//house
+import 'package:flutter/material.dart';
+import 'package:snippet_coder_utils/FormHelper.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:developer';
+import 'package:json_annotation/json_annotation.dart';
 
 class left_search_menu extends StatefulWidget {
   const left_search_menu({Key? key}) : super(key: key);
@@ -10,97 +12,148 @@ class left_search_menu extends StatefulWidget {
   @override
   State<left_search_menu> createState() => _left_search_menuState();
 }
+class User {
+  String name;
+  int age;
+  String name1;
+  int age1;
 
+  User({required this.name, required this.age,required this.name1,required this.age1});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'age': age,
+      'name1':name1,
+      'age1':age1
+    };
+  }
+}
 class _left_search_menuState extends State<left_search_menu> {
 
-  List<dynamic> countries=[];
-  List<dynamic> statesMasters=[];
+  List<dynamic> countries = [];
+  List<dynamic> statesMasters = [];
+  List<dynamic> state = [];
 
   String? countryId;
+  String? stateID;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    this.countries.add({"id":1,"name":"India"});
-    this.countries.add({"id":2,"name":"UAE"});
-
-    this.statesMasters=[
-      {"ID":1,"Name":"Apple","ParentId":1},
-      {"ID":2,"Name":"B","ParentId":1},
-      {"ID":3,"Name":"C","ParentId":1},
-      {"ID":1,"Name":"x","ParentId":2},
-      {"ID":2,"Name":"y","ParentId":2},
-      {"ID":3,"Name":"z","ParentId":2},
+    this.countries=[
+      {"pk": 1,"name": "台北市"},
+      {"pk": 2,"name": "新北市"}
+    ];
+    this.statesMasters = [
+      {"ID": 1, "Name": "Apple", "ParentId": 1},
+      {"ID": 2, "Name": "B"    , "ParentId": 1},
+      {"ID": 3, "Name": "C"    , "ParentId": 1},
+      {"ID": 4, "Name": "x"    , "ParentId": 2},
+      {"ID": 5, "Name": "y"    , "ParentId": 2},
+      {"ID": 6, "Name": "z"    , "ParentId": 2},
     ];
   }
 
   @override
-  Widget build(BuildContext context) {
-
-    return  Container(
+  Widget build(BuildContext context)  {
+    return Container(
       width: 350,
-      child:Drawer(
+      child: Drawer(
         child: Container(
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-
               Container(
-                color: const Color.fromRGBO(126,214,223,1),
+                color: const Color.fromRGBO(126, 214, 223, 1),
                 height: 80,
                 padding: EdgeInsets.only(top: 25),
                 child: Text("Look for house"),
-
               ),
               Container(
-                height: 100,
-                decoration: const BoxDecoration(
-                  color:  Color.fromRGBO(236,240,241,1)//rgba(236, 240, 241,1.0)
-                  // border: Border(
-                  //   top: BorderSide(width: 2),
-                  //   bottom: BorderSide(width: 2),
-                 // )
-                ),
+                color: Colors.redAccent,
+                height: 250,
                 child: Column(
                   children: [
                     FormHelper.dropDownWidgetWithLabel(
-                      labelFontSize:15,
+                      labelFontSize: 30,
                       context,
-                      "縣市/County",
+                      "Country",
                       "Select Country",
                       this.countryId,
                       this.countries,
-                          (onChangedVal){
-                        this.countryId=onChangedVal;
-                        print("Selected Country:$onChangedVal");
+                      (onChangedVal) {
+                        var json = {
+                          'name' : 'Justin',
+                          'age'  : 40,
+                          'childs' : [
+                            {
+                              'name1' : 'hamimi',
+                              'age1'  : 3
+                            }
+                          ]
+                        };
+                        var app = jsonEncode(json);
+                        // app.forEach((key, value) => print('${key}: ${value}'));
+                        Map<String, dynamic> user = jsonEncode(json);
+                        user.forEach((key, value) => print('${key}: ${value}'));
+                        this.countryId =onChangedVal;
 
+
+                        print("Selected Country:$onChangedVal");
+                        this.state=this.
+                        statesMasters.
+                        where(
+                              (stateItem)=>
+                          stateItem["ParentId"].toString()==
+                              onChangedVal.toString(),
+                        ).toList();
+                        this.stateID=null;
                         setState(() { });
+                        print("22");
                       },
-                          (onChangedVal){
-                        if(onChangedVal==null){
-                          return"please select Country";
+                      (onValidate) {
+                        if (onValidate == null) {
+                          return "please select Country";
                         }
                         return null;
                       },
-                      borderColor:Theme.of(context).primaryColor,
-                      borderFocusColor:Theme.of(context).primaryColor,
+                      borderColor: Theme.of(context).primaryColor,
+                      borderFocusColor: Theme.of(context).primaryColor,
                       borderRadius: 10,
-
-                      //optionValue: "id",
-                      //optionLabel: "name"
-
+                      optionValue: "pk",
+                      //optionLabel: field["name"]
+                    ),
+                    FormHelper.dropDownWidgetWithLabel(
+                        context,
+                        "State",
+                        "select state",
+                        this.stateID,
+                        this.state,
+                            (onChangedVal){
+                          this.stateID=onChangedVal;
+                          print("select state$onChangedVal");
+                        },
+                            (onValidate){
+                          return null;
+                        },
+                        borderColor:Theme.of(context).primaryColor,
+                        borderFocusColor:Theme.of(context).primaryColor,
+                        borderRadius: 10,
+                        optionValue: "ID",
+                        optionLabel: "Name"
+                    ),
+                    Container(
+                      //height: 100,
+                      child: TextField(
+                        onChanged: (text) {
+                          print('First text field: $text');
+                        },
+                      ),
                     ),
                   ],
                 ),
               ),
-              if(countryId=='1')
-                taipeiDistrict(),
-
-
-              Container(
-                color: Color.fromRGBO(236,240,241,1),
-                height: 500,
-              )
             ],
           ),
         ),
