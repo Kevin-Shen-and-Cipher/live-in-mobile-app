@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:live_in/page/search_menu/newTaipei_district.dart';
-import 'package:live_in/page/search_menu/taipei_district.dart';
+import 'package:live_in/page/search_menu/district_data.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,6 +15,7 @@ class left_search_menu extends StatefulWidget {
 }
 
 class _left_search_menuState extends State<left_search_menu> {
+
   String getdata(List<dynamic> list,int index,String value){
     String text=jsonEncode(list[index]);
     var json=jsonDecode(text);
@@ -42,6 +43,7 @@ class _left_search_menuState extends State<left_search_menu> {
     }
     return  Returnlist;
   }
+
   List<dynamic> test=[{
       "pk": 1,
       "fields": {
@@ -67,8 +69,10 @@ class _left_search_menuState extends State<left_search_menu> {
       }
     }
   ];
-  List<dynamic> countries = [{"pk": 1, "name": "台北"},{"pk": 2, "name": "新北"}];
-  List<dynamic> statesMasters = [];
+  List<dynamic> countries = [
+    {"pk": 1, "name": "台北"},
+    {"pk": 2, "name": "新北"}
+  ];
   List<dynamic> rent_type = [
     ["透天", false],
     ["獨立套房", false],
@@ -117,7 +121,10 @@ class _left_search_menuState extends State<left_search_menu> {
   ];
 
   String? countryId;
-  String? companyLocation;
+  String? address;
+
+  taipei taipei_district=new taipei();
+  newTaipei newTaipei_district=new newTaipei();
 
   @override
   void initState() {
@@ -151,6 +158,7 @@ class _left_search_menuState extends State<left_search_menu> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       width: 350,
       child: Drawer(
@@ -175,7 +183,6 @@ class _left_search_menuState extends State<left_search_menu> {
               ),
               Container(
                   height: 100,
-                  //rgba(236, 240, 241,1.0)
                   decoration: const BoxDecoration(
                       color: Color.fromRGBO(236, 240, 241, 1),
                       border: Border(
@@ -187,41 +194,63 @@ class _left_search_menuState extends State<left_search_menu> {
                     decoration: const InputDecoration(
                       icon: Icon(Icons.location_city),
                       labelText: "目前工作地址",
+                      helperText: "*必填",
+                      helperStyle: TextStyle(
+                        color: Colors.red,
+                      )
                     ),
                     onSubmitted: (text) {
-                      final city = text.split('市');
-                      final districtAndLocation = city[1].split('區');
-                      print("city: ${city[0]} ,"
-                          "district: ${districtAndLocation[0]} , "
-                          "location: ${districtAndLocation[1]}");
+                      address=text;
+                      print(address);
                     },
                   )),
               Container(
                 height: 100,
                 decoration: const BoxDecoration(
-                    color: Color.fromRGBO(
-                        236, 240, 241, 1) //rgba(236, 240, 241,1.0)
-                    ),
+                    color: Color.fromRGBO(236, 240, 241, 1) //rgba(236, 240, 241,1.0)
+                ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    FormHelper.dropDownWidgetWithLabel(
-                      labelFontSize: 20,
+                    Container(
+                      padding: EdgeInsets.only(left: 15,bottom: 8,top: 10),
+                      child: Row(
+                        children: const [
+                          Text("位置/County",
+                            style: TextStyle(
+                            fontSize: 20, // 大小
+                            fontWeight: FontWeight.bold,
+                          ),),
+                          Text("  *必填",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.red,
+                            ),)
+                        ],),
+                    ),
+                    FormHelper.dropDownWidget(
                       context,
-                      "位置/County",
                       "Select County",
                       this.countryId,
                       this.countries,
                       (onChangedVal) {
                         this.countryId = onChangedVal;
                         print("Selected County:$onChangedVal");
+                        if(countryId=='1'){
+                          for(int i=0 ;i<newTaipei_district.getnewTaipei_districtlist().length;i++){
+                            newTaipei_district.getnewTaipei_districtlist()[i][1]=false;
+                          }}
+                        if(countryId=='2'){
+                          for(int i=0 ;i<taipei_district.gettaipei_district().length;i++){
+                            taipei_district.gettaipei_district()[i][1]=false;
+                          }}
                         setState(() {});
                       },
                       (onChangedVal) {
                         if (onChangedVal == null) {
-                          return "please select County";
-                        }
-                        return null;
-                      },
+                          return "please select County";}
+                        return null;},
                       borderColor: Theme.of(context).primaryColor,
                       borderFocusColor: Theme.of(context).primaryColor,
                       borderRadius: 10,
@@ -229,9 +258,63 @@ class _left_search_menuState extends State<left_search_menu> {
                     ),
                   ],
                 ),
-              ),
-              if (countryId == '1') taipeiDistrict(),
-              if (countryId == '2') newTaipei_district(),
+              ),//位置下拉選單
+              if (countryId == '1')
+                Container(
+                color:  Color.fromRGBO(236,240,241,1),
+                padding: EdgeInsets.only(left: 30),
+                child: Wrap(
+                  spacing: 8.0, // 主轴(水平)方向间距
+                  runSpacing: 4.0, // 纵轴（垂直）方向间距
+                  children: <Widget>[
+                    for(int i=0;i<taipei_district.gettaipei_district().length;i++)
+                      InputChip(
+                          selected: taipei_district.gettaipei_district()[i][1],
+                          label: Text(taipei_district.gettaipei_district()[i][0]+"區"),
+                          labelStyle: TextStyle(color: Colors.white),
+                          avatar: Icon(Icons.add,),
+                          backgroundColor: Colors.black54,
+                          selectedColor: Colors.blue,
+                          onPressed: () {
+
+                            setState(() {
+                              taipei_district.gettaipei_district()[i][1] = !taipei_district.gettaipei_district()[i][1];
+                              print(taipei_district.gettaipei_district()[i][0]+' is '+(taipei_district.gettaipei_district()[i][1]).toString(),);
+
+                            });
+                          }
+                      ),
+                  ],
+                ),
+              ),//台北
+              if (countryId == '2')
+                Container(
+                color:  Color.fromRGBO(236,240,241,1),
+                padding: EdgeInsets.only(left: 30),
+                child: Wrap(
+                  spacing: 8.0, // 主轴(水平)方向间距
+                  runSpacing: 4.0, // 纵轴（垂直）方向间距
+                  children: <Widget>[
+                    for(int i=0;i<newTaipei_district.getnewTaipei_districtlist().length;i++)
+                      InputChip(
+                          selected: newTaipei_district.getnewTaipei_districtlist()[i][1],
+                          label: Text(newTaipei_district.getnewTaipei_districtlist()[i][0]+"區"),
+                          labelStyle: TextStyle(color: Colors.white),
+                          avatar: Icon(Icons.add,),
+                          backgroundColor: Colors.black54,
+                          selectedColor: Colors.blue,
+                          onPressed: () {
+
+                            setState(() {
+                              newTaipei_district.getnewTaipei_districtlist()[i][1] = !newTaipei_district.getnewTaipei_districtlist()[i][1];
+                              print(newTaipei_district.getnewTaipei_districtlist()[i][0]+' is '+(newTaipei_district.getnewTaipei_districtlist()[i][1]).toString(),);
+
+                            });
+                          }
+                      ),
+                  ],
+                ),
+              ),//新北
               Container(
                   color: Color.fromRGBO(236, 240, 241, 1),
                   height: 150,
@@ -240,7 +323,7 @@ class _left_search_menuState extends State<left_search_menu> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "類型",
+                        "租賃類型/Type of lease",
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -268,12 +351,11 @@ class _left_search_menuState extends State<left_search_menu> {
                                       print(
                                         rent_type[i][0] +"test" + ' is ' + (rent_type[i][1]).toString(),
                                       );
-
                                     });
                                   }),
                           ]),
                     ],
-                  )),
+                  )),//租賃類型
               Container(
                   color: Color.fromRGBO(236, 240, 241, 1),
                   height: 200,
@@ -282,7 +364,7 @@ class _left_search_menuState extends State<left_search_menu> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "租金",
+                        "租金/Rent",
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -316,7 +398,7 @@ class _left_search_menuState extends State<left_search_menu> {
                                   }),
                           ]),
                     ],
-                  )),
+                  )),//租金
               Container(
                   color: Color.fromRGBO(236, 240, 241, 1),
                   height: 150,
@@ -325,7 +407,7 @@ class _left_search_menuState extends State<left_search_menu> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "格局",
+                        "格局/Pattern",
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -359,7 +441,7 @@ class _left_search_menuState extends State<left_search_menu> {
                                   }),
                           ]),
                     ],
-                  )),
+                  )),//格局
               Container(
                   color: Color.fromRGBO(236, 240, 241, 1),
                   height: 100,
@@ -368,51 +450,7 @@ class _left_search_menuState extends State<left_search_menu> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "特色",
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 20, // 大小
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Wrap(
-                          spacing: 8.0, // 主轴(水平)方向间距
-                          runSpacing: 4.0, // 纵轴（垂直）方向间距
-                          children: <Widget>[
-                            for (int i = 0; i < facility_type.length; i++)
-                              InputChip(
-                                  selected: facility_type[i][1],
-                                  label: Text(facility_type[i][0]),
-                                  labelStyle: TextStyle(color: Colors.white),
-                                  avatar: Icon(
-                                    Icons.add,
-                                  ),
-                                  backgroundColor: Colors.black54,
-                                  selectedColor: Colors.blue,
-                                  onPressed: () {
-                                    setState(() {
-                                      facility_type[i][1] =
-                                          !facility_type[i][1];
-                                      print(
-                                        facility_type[i][0] +
-                                            ' is ' +
-                                            (facility_type[i][1]).toString(),
-                                      );
-                                    });
-                                  }),
-                          ]),
-                    ],
-                  )),
-              Container(
-                  color: Color.fromRGBO(236, 240, 241, 1),
-                  height: 100,
-                  padding: EdgeInsets.only(left: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "型態",
+                        "房子型態/Type",
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -447,7 +485,7 @@ class _left_search_menuState extends State<left_search_menu> {
                                   }),
                           ]),
                     ],
-                  )),
+                  )),//房子型態
               Container(
                   color: Color.fromRGBO(236, 240, 241, 1),
                   height: 200,
@@ -456,7 +494,7 @@ class _left_search_menuState extends State<left_search_menu> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "設備",
+                        "設備/Device",
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -490,7 +528,7 @@ class _left_search_menuState extends State<left_search_menu> {
                                   }),
                           ]),
                     ],
-                  )),
+                  )),//設備
               Container(
                   color: Color.fromRGBO(236, 240, 241, 1),
                   height: 150,
@@ -499,7 +537,7 @@ class _left_search_menuState extends State<left_search_menu> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "須知",
+                        "限制/Restrict",
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -533,7 +571,7 @@ class _left_search_menuState extends State<left_search_menu> {
                                   }),
                           ]),
                     ],
-                  )),
+                  )),//限制
               Container(
                 color: Color.fromRGBO(236, 240, 241, 1),
                 height: 50,
@@ -543,29 +581,44 @@ class _left_search_menuState extends State<left_search_menu> {
                     backgroundColor: Colors.blueGrey,
                   ),
                   child: const Text(
-                    '收尋',
+                    '收尋/Search',
                     style: TextStyle(
                       fontSize: 20, // 大小
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   onPressed: () {
-                    List<dynamic> alldata=[
-                      {
-                        "apartment.apartmenttype":GetAllData(apartment_type),
-                        "apartment.device":GetAllData(device),
-                        "apartment.renttype":GetAllData(rent),
-                        "apartment.facilitytype":GetAllData(facility_type),
-                        "apartment.restrict":GetAllData(restrict),
-                        "apartment.roomtype":GetAllData(room_type),
-                        "taipei_district":GetAllData(taipei_district),
-                        "newTaipei_districtlist":GetAllData(newTaipei_districtlist)
-                      },
-                    ];
-                    var u = jsonEncode(alldata[0]);
-                    var k = jsonDecode(u);
-                    //print(k['apartment.device']);
-                    print(u);
+
+                    if(address==null|| (GetAllData(taipei_district.gettaipei_district()).isEmpty
+                        &&GetAllData(newTaipei_district.getnewTaipei_districtlist()).isEmpty)){
+                      print("error，address or district is null");
+                      Fluttertoast.showToast(
+                          backgroundColor: Colors.deepOrangeAccent,
+                          msg: "錯誤，「目前工作地址」和「位置」為必填",  // message
+                          toastLength: Toast.LENGTH_SHORT, // length
+                          gravity: ToastGravity.CENTER,    // location
+                          timeInSecForIosWeb: 3            // duration
+                      );
+                    }else{
+                      List<dynamic> alldata=[
+                        {
+                          "apartmenttype":GetAllData(apartment_type),
+                          "device":GetAllData(device),
+                          "renttype":GetAllData(rent),
+                          "facilitytype":GetAllData(facility_type),
+                          "restrict":GetAllData(restrict),
+                          "roomtype":GetAllData(room_type),
+                          "taipei_district":GetAllData(taipei_district.gettaipei_district()),
+                          "newTaipei_districtlist":GetAllData(newTaipei_district.getnewTaipei_districtlist())
+
+                        },
+
+                      ];
+                      var u = jsonEncode(alldata[0]);
+                      var k = jsonDecode(u);
+                      //print(k['apartment.device']);
+                      print(u);
+                    }
                   },
                 ),
               )

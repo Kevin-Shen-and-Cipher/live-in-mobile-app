@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:live_in/page/search_menu/taipei_district.dart';
-import 'package:snippet_coder_utils/FormHelper.dart';
+import 'dart:convert';
 
-import 'newTaipei_district.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:snippet_coder_utils/FormHelper.dart';
+import 'package:live_in/page/search_menu/district_data.dart';
+
 
 //work
 
@@ -16,6 +18,34 @@ class righ_search_menu extends StatefulWidget {
 }
 
 class _righ_search_menuState extends State<righ_search_menu> {
+
+  String getdata(List<dynamic> list,int index,String value){
+    String text=jsonEncode(list[index]);
+    var json=jsonDecode(text);
+    // print(json["fields"]);
+    if(value=='name'){
+      var valuetext=jsonEncode(json["fields"]);
+      var ans=jsonDecode(valuetext);
+      return ans[value];
+    }
+    else{
+      return json[value];
+    }
+  }
+  bool getbool(List<dynamic> list,int index,String value){
+    String text=jsonEncode(list[index]);
+    var json=jsonDecode(text);
+    return json[value];
+  }
+  List<dynamic> GetAllData(List<dynamic> list){
+    List<dynamic> Returnlist=[];
+    for(int i=0;i<list.length;i++){
+      if(list[i][1]){
+        Returnlist.add(i);
+      }
+    }
+    return  Returnlist;
+  }
   List<dynamic> countries=[];
   List<dynamic> statesMasters=[];
   List<dynamic> job=[["軟體工程師",false],["演算法工程師",false],["前端工程師",false],["後端工程師",false]];
@@ -23,6 +53,11 @@ class _righ_search_menuState extends State<righ_search_menu> {
 
   String? countryId;
   String? companyLocation;
+
+  String? address;
+
+  taipei taipei_district=new taipei();
+  newTaipei newTaipei_district=new newTaipei();
 
   @override
   void initState(){
@@ -40,12 +75,11 @@ class _righ_search_menuState extends State<righ_search_menu> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-
               Container(
                 color: const Color.fromRGBO(147,197,253,1),
                 height: 80,
                 padding: EdgeInsets.only(top: 35),
-                child: Text(
+                child: const Text(
                   "找工作",
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
@@ -59,45 +93,72 @@ class _righ_search_menuState extends State<righ_search_menu> {
                   height: 100,
                   //rgba(236, 240, 241,1.0)
                   decoration: const BoxDecoration(
-                      color:  Color.fromRGBO(236,240,241,1),
-                      border:Border(
+                      color: Color.fromRGBO(236, 240, 241, 1),
+                      border: Border(
                           bottom: BorderSide(
-                              color:  Color.fromRGBO(196,200,201,1),
-                              width: 3)
-                      )),
-                  padding: EdgeInsets.only(top: 5,left: 15,right: 10),
-                  child: TextField(decoration: const InputDecoration(
-                    icon: Icon(Icons.location_city),
-                    labelText: "目前居住地址",
-                  ),
-                    onSubmitted: (text){
-                      final city=text.split('市');
-                      final districtAndLocation=city[1].split('區');
-                      print("city: ${city[0]} ,"
-                          "district: ${districtAndLocation[0]} , "
-                          "location: ${districtAndLocation[1]}");
+                              color: Color.fromRGBO(196, 200, 201, 1),
+                              width: 3))),
+                  padding: EdgeInsets.only(top: 5, left: 15, right: 10),
+                  child: TextField(
+                    decoration: const InputDecoration(
+                        icon: Icon(Icons.location_city),
+                        labelText: "目前工作地址",
+                        helperText: "*必填",
+                        helperStyle: TextStyle(
+                          color: Colors.red,
+                        )
+                    ),
+                    onSubmitted: (text) {
+                      address=text;
+                      print(address);
                     },
-                  )
-
-              ),
+                  )),
               Container(
                 height: 100,
                 decoration: const BoxDecoration(
                     color:  Color.fromRGBO(236,240,241,1)//rgba(236, 240, 241,1.0)
                 ),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    FormHelper.dropDownWidgetWithLabel(
-                      labelFontSize:20,
+                    Container(
+                      padding: EdgeInsets.only(left: 15,bottom: 8,top: 10),
+                      child: Row(
+                        children: const [
+                          Text("位置/County",
+                            style: TextStyle(
+                              fontSize: 20, // 大小
+                              fontWeight: FontWeight.bold,
+                            ),),
+                          Text("  *必填",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.red,
+                            ),)
+                        ],
+                      ),
+                    ),
+                    FormHelper.dropDownWidget(
                       context,
-                      "位置/County",
                       "Select County",
                       this.countryId,
                       this.countries,
                           (onChangedVal){
-                        this.countryId=onChangedVal;
-                        print("Selected County:$onChangedVal");
-                        setState(() { });},
+                            this.countryId = onChangedVal;
+                            print("Selected County:$onChangedVal");
+                            if(countryId=='1'){
+                              for(int i=0 ;i<newTaipei_district.getnewTaipei_districtlist().length;i++){
+                                newTaipei_district.getnewTaipei_districtlist()[i][1]=false;
+                              }
+                            }
+                            if(countryId=='2'){
+                              for(int i=0 ;i<taipei_district.gettaipei_district().length;i++){
+                                taipei_district.gettaipei_district()[i][1]=false;
+                              }
+                            }
+                            setState(() {});
+                        },
                           (onChangedVal){
                         if(onChangedVal==null){
                           return"please select County";}
@@ -111,11 +172,63 @@ class _righ_search_menuState extends State<righ_search_menu> {
                   ],
                 ),
               ),
-              if(countryId=='1')
-                taipeiDistrict(),
-              if(countryId=='2')
-                newTaipei_district(),
 
+              if (countryId == '1')
+                Container(
+                  color:  Color.fromRGBO(236,240,241,1),
+                  padding: EdgeInsets.only(left: 30),
+                  child: Wrap(
+                    spacing: 8.0, // 主轴(水平)方向间距
+                    runSpacing: 4.0, // 纵轴（垂直）方向间距
+                    children: <Widget>[
+                      for(int i=0;i<taipei_district.gettaipei_district().length;i++)
+                        InputChip(
+                            selected: taipei_district.gettaipei_district()[i][1],
+                            label: Text(taipei_district.gettaipei_district()[i][0]+"區"),
+                            labelStyle: TextStyle(color: Colors.white),
+                            avatar: Icon(Icons.add,),
+                            backgroundColor: Colors.black54,
+                            selectedColor: Colors.blue,
+                            onPressed: () {
+
+                              setState(() {
+                                taipei_district.gettaipei_district()[i][1] = !taipei_district.gettaipei_district()[i][1];
+                                print(taipei_district.gettaipei_district()[i][0]+' is '+(taipei_district.gettaipei_district()[i][1]).toString(),);
+
+                              });
+                            }
+                        ),
+                    ],
+                  ),
+                ),
+              if (countryId == '2')
+                Container(
+                  color:  Color.fromRGBO(236,240,241,1),
+                  padding: EdgeInsets.only(left: 30),
+                  child: Wrap(
+                    spacing: 8.0, // 主轴(水平)方向间距
+                    runSpacing: 4.0, // 纵轴（垂直）方向间距
+                    children: <Widget>[
+                      for(int i=0;i<newTaipei_district.getnewTaipei_districtlist().length;i++)
+                        InputChip(
+                            selected: newTaipei_district.getnewTaipei_districtlist()[i][1],
+                            label: Text(newTaipei_district.getnewTaipei_districtlist()[i][0]+"區"),
+                            labelStyle: TextStyle(color: Colors.white),
+                            avatar: Icon(Icons.add,),
+                            backgroundColor: Colors.black54,
+                            selectedColor: Colors.blue,
+                            onPressed: () {
+
+                              setState(() {
+                                newTaipei_district.getnewTaipei_districtlist()[i][1] = !newTaipei_district.getnewTaipei_districtlist()[i][1];
+                                print(newTaipei_district.getnewTaipei_districtlist()[i][0]+' is '+(newTaipei_district.getnewTaipei_districtlist()[i][1]).toString(),);
+
+                              });
+                            }
+                        ),
+                    ],
+                  ),
+                ),
 
               Container(
                   color: Color.fromRGBO(236,240,241,1),
@@ -209,7 +322,32 @@ class _righ_search_menuState extends State<righ_search_menu> {
                       fontSize: 20,                          // 大小
                       fontWeight: FontWeight.bold,),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    if(address==null|| (GetAllData(taipei_district.gettaipei_district()).isEmpty
+                        &&GetAllData(newTaipei_district.getnewTaipei_districtlist()).isEmpty)){
+                      print("error，address or district is null");
+                      Fluttertoast.showToast(
+                          backgroundColor: Colors.deepOrangeAccent,
+                          msg: "錯誤，「目前工作地址」和「位置」為必填",  // message
+                          toastLength: Toast.LENGTH_SHORT, // length
+                          gravity: ToastGravity.CENTER,    // location
+                          timeInSecForIosWeb: 3            // duration
+                      );
+                    }else{
+                      List<dynamic> alldata=[
+                        {
+                          "job_position":GetAllData(job),
+                          "working_hour":GetAllData(work_hour),
+                          "taipei_district":GetAllData(taipei_district.gettaipei_district()),
+                          "newTaipei_districtlist":GetAllData(newTaipei_district.getnewTaipei_districtlist())
+                        },
+                      ];
+                      var u = jsonEncode(alldata[0]);
+                      var k = jsonDecode(u);
+                      //print(k['apartment.device']);
+                      print(u);
+                    }
+                  },
                 ),
               )
             ],
