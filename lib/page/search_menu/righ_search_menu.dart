@@ -46,25 +46,31 @@ class _righ_search_menuState extends State<righ_search_menu> {
     }
     return  Returnlist;
   }
-  List<dynamic> countries=[];
-  List<dynamic> statesMasters=[];
-  List<dynamic> job=[["軟體工程師",false],["演算法工程師",false],["前端工程師",false],["後端工程師",false]];
-  List<dynamic> work_hour=[["日班",false],["晚班",false],["大夜班",false],["假日班",false],["輪班",false]];
+  List<dynamic> countries=[
+    {"id":1,"name":"台北"},
+    {"id":2,"name":"新北"},];
+  List<dynamic> salary=[
+    {"id":1,"name":"月薪3萬up"},
+    {"id":2,"name":"月薪4萬up"},
+    {"id":3,"name":"月薪5萬up"},];
+  List<dynamic> job=[
+    ["軟體工程師",false],
+    ["演算法工程師",false],
+    ["前端工程師",false],
+    ["後端工程師",false]];
+  List<dynamic> work_hour=[
+    ["日班",false],
+    ["晚班",false],
+    ["大夜班",false],
+    ["假日班",false],
+    ["輪班",false]];
 
   String? countryId;
-  String? companyLocation;
-
+  String? salaryId;
   String? address;
 
   taipei taipei_district=new taipei();
   newTaipei newTaipei_district=new newTaipei();
-
-  @override
-  void initState(){
-    super.initState();
-    this.countries.add({"id":1,"name":"台北"});
-    this.countries.add({"id":2,"name":"新北"});
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,12 +154,12 @@ class _righ_search_menuState extends State<righ_search_menu> {
                             this.countryId = onChangedVal;
                             print("Selected County:$onChangedVal");
                             if(countryId=='1'){
-                              for(int i=0 ;i<newTaipei_district.getnewTaipei_districtlist().length;i++){
+                              for(int i=0 ;i<newTaipei_district.getnewTaipei_districtlistLength();i++){
                                 newTaipei_district.getnewTaipei_districtlist()[i][1]=false;
                               }
                             }
                             if(countryId=='2'){
-                              for(int i=0 ;i<taipei_district.gettaipei_district().length;i++){
+                              for(int i=0 ;i<taipei_district.gettaipei_districtLength();i++){
                                 taipei_district.gettaipei_district()[i][1]=false;
                               }
                             }
@@ -181,7 +187,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
                     spacing: 8.0, // 主轴(水平)方向间距
                     runSpacing: 4.0, // 纵轴（垂直）方向间距
                     children: <Widget>[
-                      for(int i=0;i<taipei_district.gettaipei_district().length;i++)
+                      for(int i=0;i<taipei_district.gettaipei_districtLength();i++)
                         InputChip(
                             selected: taipei_district.gettaipei_district()[i][1],
                             label: Text(taipei_district.gettaipei_district()[i][0]+"區"),
@@ -209,7 +215,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
                     spacing: 8.0, // 主轴(水平)方向间距
                     runSpacing: 4.0, // 纵轴（垂直）方向间距
                     children: <Widget>[
-                      for(int i=0;i<newTaipei_district.getnewTaipei_districtlist().length;i++)
+                      for(int i=0;i<newTaipei_district.getnewTaipei_districtlistLength();i++)
                         InputChip(
                             selected: newTaipei_district.getnewTaipei_districtlist()[i][1],
                             label: Text(newTaipei_district.getnewTaipei_districtlist()[i][0]+"區"),
@@ -229,6 +235,51 @@ class _righ_search_menuState extends State<righ_search_menu> {
                     ],
                   ),
                 ),
+
+              Container(
+                height: 100,
+                decoration: const BoxDecoration(
+                    color:  Color.fromRGBO(236,240,241,1)//rgba(236, 240, 241,1.0)
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(left: 15,bottom: 8,top: 10),
+                      child: Row(
+                        children: const [
+                          Text("薪資待遇/Salary",
+                            style: TextStyle(
+                              fontSize: 20, // 大小
+                              fontWeight: FontWeight.bold,
+                            ),),
+                        ],
+                      ),
+                    ),
+                    FormHelper.dropDownWidget(
+                      context,
+                      "Select Salary",
+                      this.salaryId,
+                      this.salary,
+                          (onChangedVal){
+                        this.salaryId = onChangedVal;
+                        print("Selected Salary:$onChangedVal");
+
+                        setState(() {});
+                      },
+                          (onChangedVal){
+                        if(onChangedVal==null){
+                          return"please select Salary";}
+                        return null;},
+                      borderColor:Theme.of(context).primaryColor,
+                      borderFocusColor:Theme.of(context).primaryColor,
+                      borderRadius: 10,
+                      //optionValue: "id",
+                      //optionLabel: "name"
+                    ),
+                  ],
+                ),
+              ),
 
               Container(
                   color: Color.fromRGBO(236,240,241,1),
@@ -325,7 +376,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
                   onPressed: () {
                     if(address==null|| (GetAllData(taipei_district.gettaipei_district()).isEmpty
                         &&GetAllData(newTaipei_district.getnewTaipei_districtlist()).isEmpty)){
-                      print("error，address or district is null");
+                      print("error，address or district is null $address");
                       Fluttertoast.showToast(
                           backgroundColor: Colors.deepOrangeAccent,
                           msg: "錯誤，「目前工作地址」和「位置」為必填",  // message
@@ -336,6 +387,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
                     }else{
                       List<dynamic> alldata=[
                         {
+                          "min_salary":(salaryId),
                           "job_position":GetAllData(job),
                           "working_hour":GetAllData(work_hour),
                           "taipei_district":GetAllData(taipei_district.gettaipei_district()),

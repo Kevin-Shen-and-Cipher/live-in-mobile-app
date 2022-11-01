@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 
 
 class taipei {
-  List<dynamic> taipei_district=[
+  List<dynamic> _taipei_district=[
     ["中山",false],["大安",false],["信義",false],["士林",false],
     ["內湖",false],["中正",false],["萬華",false],["松山",false],
     ["大同",false], ["文山",false],["北投",false],["南港",false]];
 
   List gettaipei_district(){
-    return taipei_district;
+    return _taipei_district;
+  }
+  int gettaipei_districtLength(){
+    return _taipei_district.length;
   }
 }
 
@@ -23,5 +26,8 @@ class newTaipei{
 
   List getnewTaipei_districtlist(){
     return newTaipei_districtlist;
+  }
+  int getnewTaipei_districtlistLength(){
+    return newTaipei_districtlist.length;
   }
 }

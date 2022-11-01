@@ -71,39 +71,33 @@ class _left_search_menuState extends State<left_search_menu> {
   ];
   List<dynamic> countries = [
     {"pk": 1, "name": "台北"},
-    {"pk": 2, "name": "新北"}
-  ];
+    {"pk": 2, "name": "新北"}];
+  List<dynamic> rent=[
+    {"pk": 1, "name": "0~5000"},
+    {"pk": 2, "name": "5000~10000"},
+    {"pk": 3, "name": "10000~20000"},
+    {"pk": 4, "name": "20000~30000"},
+    {"pk": 5, "name": "30000~40000"},
+    {"pk": 6, "name": "40000以上"},];
   List<dynamic> rent_type = [
     ["透天", false],
     ["獨立套房", false],
     ["分租套房", false],
-    ["雅房", false]
-  ];
-  List<dynamic> rent = [
-    ["0~5000", false],
-    ["5000~10000", false],
-    ["10000~20000", false],
-    ["20000~30000", false],
-    ["30000~40000", false],
-    ["40000以上", false]
-  ];
+    ["雅房", false]];
   List<dynamic> facility_type = [
     ["捷運", false],
     ["公車", false],
-    ["學校", false]
-  ];
+    ["學校", false]];
   List<dynamic> room_type = [
     ["一房", false],
     ["二房", false],
     ["三房", false],
-    ["四房以上", false]
-  ];
+    ["四房以上", false]];
   List<dynamic> apartment_type = [
     ["公寓", false],
     ["大樓", false],
     ["透天", false],
-    ["別墅", false]
-  ];
+    ["別墅", false]];
   List<dynamic> device = [
     ["冷氣", false],
     ["洗衣機", false],
@@ -111,17 +105,19 @@ class _left_search_menuState extends State<left_search_menu> {
     ["熱水器", false],
     ["天然瓦斯", false],
     ["網路", false],
-    ["床", false]
-  ];
+    ["床", false]];
   List<dynamic> restrict = [
     ["男女皆可", false],
     ["限男", false],
     ["限女", false],
-    ["排除頂樓加蓋", false]
-  ];
+    ["排除頂樓加蓋", false]];
 
   String? countryId;
   String? address;
+  String? rentId;
+
+  String? minRent;
+  String? maxRent;
 
   taipei taipei_district=new taipei();
   newTaipei newTaipei_district=new newTaipei();
@@ -238,11 +234,11 @@ class _left_search_menuState extends State<left_search_menu> {
                         this.countryId = onChangedVal;
                         print("Selected County:$onChangedVal");
                         if(countryId=='1'){
-                          for(int i=0 ;i<newTaipei_district.getnewTaipei_districtlist().length;i++){
+                          for(int i=0 ;i<newTaipei_district.getnewTaipei_districtlistLength();i++){
                             newTaipei_district.getnewTaipei_districtlist()[i][1]=false;
                           }}
                         if(countryId=='2'){
-                          for(int i=0 ;i<taipei_district.gettaipei_district().length;i++){
+                          for(int i=0 ;i<taipei_district.gettaipei_districtLength();i++){
                             taipei_district.gettaipei_district()[i][1]=false;
                           }}
                         setState(() {});
@@ -267,7 +263,7 @@ class _left_search_menuState extends State<left_search_menu> {
                   spacing: 8.0, // 主轴(水平)方向间距
                   runSpacing: 4.0, // 纵轴（垂直）方向间距
                   children: <Widget>[
-                    for(int i=0;i<taipei_district.gettaipei_district().length;i++)
+                    for(int i=0;i<taipei_district.gettaipei_districtLength();i++)
                       InputChip(
                           selected: taipei_district.gettaipei_district()[i][1],
                           label: Text(taipei_district.gettaipei_district()[i][0]+"區"),
@@ -295,7 +291,7 @@ class _left_search_menuState extends State<left_search_menu> {
                   spacing: 8.0, // 主轴(水平)方向间距
                   runSpacing: 4.0, // 纵轴（垂直）方向间距
                   children: <Widget>[
-                    for(int i=0;i<newTaipei_district.getnewTaipei_districtlist().length;i++)
+                    for(int i=0;i<newTaipei_district.getnewTaipei_districtlistLength();i++)
                       InputChip(
                           selected: newTaipei_district.getnewTaipei_districtlist()[i][1],
                           label: Text(newTaipei_district.getnewTaipei_districtlist()[i][0]+"區"),
@@ -315,6 +311,48 @@ class _left_search_menuState extends State<left_search_menu> {
                   ],
                 ),
               ),//新北
+              Container(
+                height: 100,
+                decoration: const BoxDecoration(
+                    color: Color.fromRGBO(236, 240, 241, 1) //rgba(236, 240, 241,1.0)
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(left: 15,bottom: 8,top: 10),
+                      child: Row(
+                        children: const [
+                          Text("租金/Rent",
+                            style: TextStyle(
+                              fontSize: 20, // 大小
+                              fontWeight: FontWeight.bold,
+                            ),),
+
+                        ],),
+                    ),
+                    FormHelper.dropDownWidget(
+                      context,
+                      "Select rent",
+                      this.rentId,
+                      this.rent,
+                          (onChangedVal) {
+                        this.rentId = onChangedVal;
+                        print("Selected rent:$onChangedVal");
+                        setState(() {});
+                      },
+                          (onChangedVal) {
+                        if (onChangedVal == null) {
+                          return "please select rent";}
+                        return null;},
+                      borderColor: Theme.of(context).primaryColor,
+                      borderFocusColor: Theme.of(context).primaryColor,
+                      borderRadius: 10,
+                      optionValue: "pk",
+                    ),
+                  ],
+                ),
+              ),
               Container(
                   color: Color.fromRGBO(236, 240, 241, 1),
                   height: 150,
@@ -356,49 +394,6 @@ class _left_search_menuState extends State<left_search_menu> {
                           ]),
                     ],
                   )),//租賃類型
-              Container(
-                  color: Color.fromRGBO(236, 240, 241, 1),
-                  height: 200,
-                  padding: EdgeInsets.only(left: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "租金/Rent",
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 20, // 大小
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Wrap(
-                          spacing: 8.0, // 主轴(水平)方向间距
-                          runSpacing: 4.0, // 纵轴（垂直）方向间距
-                          children: <Widget>[
-                            for (int i = 0; i < rent.length; i++)
-                              InputChip(
-                                  selected: rent[i][1],
-                                  label: Text(rent[i][0]),
-                                  labelStyle: TextStyle(color: Colors.white),
-                                  avatar: Icon(
-                                    Icons.add,
-                                  ),
-                                  backgroundColor: Colors.black54,
-                                  selectedColor: Colors.blue,
-                                  onPressed: () {
-                                    setState(() {
-                                      rent[i][1] = !rent[i][1];
-                                      print(
-                                        rent[i][0] +
-                                            ' is ' +
-                                            (rent[i][1]).toString(),
-                                      );
-                                    });
-                                  }),
-                          ]),
-                    ],
-                  )),//租金
               Container(
                   color: Color.fromRGBO(236, 240, 241, 1),
                   height: 150,
@@ -588,6 +583,37 @@ class _left_search_menuState extends State<left_search_menu> {
                     ),
                   ),
                   onPressed: () {
+                    switch(rentId){
+                      case '1':
+                        minRent="0";
+                        maxRent="5000";
+                        break;
+                      case'2':
+                        minRent="5000";
+                        maxRent="10000";
+                        break;
+                      case'3':
+                        minRent="10000";
+                        maxRent="20000";
+                        break;
+                      case'4':
+                        minRent="20000";
+                        maxRent="30000";
+                        break;
+                      case'5':
+                        minRent="30000";
+                        maxRent="40000";
+                        break;
+                      case'6':
+                        int max=1<<32;
+                        minRent="40000";
+                        maxRent=max.toString();
+                        break;
+                      default :
+                        int max=1<<32;
+                        minRent="0";
+                        maxRent=max.toString();
+                    }
 
                     if(address==null|| (GetAllData(taipei_district.gettaipei_district()).isEmpty
                         &&GetAllData(newTaipei_district.getnewTaipei_districtlist()).isEmpty)){
@@ -602,18 +628,18 @@ class _left_search_menuState extends State<left_search_menu> {
                     }else{
                       List<dynamic> alldata=[
                         {
-                          "apartmenttype":GetAllData(apartment_type),
+                          "apartment_type":GetAllData(apartment_type),
+                          "min_price":minRent,
+                          "max_price":maxRent,
                           "device":GetAllData(device),
-                          "renttype":GetAllData(rent),
-                          "facilitytype":GetAllData(facility_type),
                           "restrict":GetAllData(restrict),
-                          "roomtype":GetAllData(room_type),
+                          "room_type":GetAllData(room_type),
                           "taipei_district":GetAllData(taipei_district.gettaipei_district()),
-                          "newTaipei_districtlist":GetAllData(newTaipei_district.getnewTaipei_districtlist())
-
+                          "newTaipei_district":GetAllData(newTaipei_district.getnewTaipei_districtlist())
+                          //TODO 每個list加1
                         },
-
                       ];
+
                       var u = jsonEncode(alldata[0]);
                       var k = jsonDecode(u);
                       //print(k['apartment.device']);
