@@ -38,37 +38,11 @@ class _left_search_menuState extends State<left_search_menu> {
     List<dynamic> Returnlist=[];
     for(int i=0;i<list.length;i++){
       if(list[i][1]){
-        Returnlist.add(i);
+        Returnlist.add(i+1);
       }
     }
     return  Returnlist;
   }
-
-  List<dynamic> test=[{
-      "pk": 1,
-      "fields": {
-        "name": "公寓"
-      }
-    },
-    {
-      "pk": 2,
-      "fields": {
-        "name": "電梯"
-      }
-    },
-    {
-      "pk": 3,
-      "fields": {
-        "name": "透天"
-      }
-    },
-    {
-      "pk": 4,
-      "fields": {
-        "name": "別墅"
-      }
-    }
-  ];
   List<dynamic> countries = [
     {"pk": 1, "name": "台北"},
     {"pk": 2, "name": "新北"}];
@@ -115,7 +89,6 @@ class _left_search_menuState extends State<left_search_menu> {
   String? countryId;
   String? address;
   String? rentId;
-
   String? minRent;
   String? maxRent;
 
@@ -126,35 +99,8 @@ class _left_search_menuState extends State<left_search_menu> {
   void initState() {
     super.initState();
   }
-
-  // void getdata() async {
-  //   var url = await Uri.https(
-  //       'https://raw.githubusercontent.com/Kevin-Shen-and-Cipher/live-in-backend/main/job/default_data/city.json');
-  //   var response =
-  //       await http.post(url, body: {'name': 'doodle', 'color': 'blue'});
-  //   var jsonResponse = jsonDecode(response.body) as Map<String, dynamic>;
-  //   var pk = jsonResponse['pk'];
-  //   print('Response pk: $pk');
-  //   print("123");
-    //print('Response fields: ${response.fields}');
-    // var url =
-    // Uri.https('www.googleapis.com', '/books/v1/volumes', {'q': '{http}'});
-
-    // // Await the http get response, then decode the json-formatted response.
-    // var response = await http.get(url);
-    // if (response.statusCode == 200) {
-    //   var jsonResponse =
-    //   jsonDecode(response.body) as Map<String, dynamic>;
-    //   var itemCount = jsonResponse['totalItems'];
-    //   print('Number of books about http: $itemCount.');
-    // } else {
-    //   print('Request failed with status: ${response.statusCode}.');
-    // }
-  //}
-
   @override
   Widget build(BuildContext context) {
-
     return Container(
       width: 350,
       child: Drawer(
@@ -626,24 +572,27 @@ class _left_search_menuState extends State<left_search_menu> {
                           timeInSecForIosWeb: 3            // duration
                       );
                     }else{
+                      Job job2;
+                      Job job=new Job(GetAllData(taipei_district.gettaipei_district()), "0","1000000000", GetAllData(rent_type), GetAllData(apartment_type), GetAllData(room_type), GetAllData(restrict), GetAllData(device));
+                      job2=new Job(GetAllData(taipei_district.gettaipei_district()), "0", "10000000", rent_type, apartment_type, room_type, restrict, device);
+                      final data=job.toJson();
+                      print(data);
                       List<dynamic> alldata=[
                         {
-                          "apartment_type":GetAllData(apartment_type),
-                          "min_price":minRent,
-                          "max_price":maxRent,
-                          "device":GetAllData(device),
-                          "restrict":GetAllData(restrict),
-                          "room_type":GetAllData(room_type),
-                          "taipei_district":GetAllData(taipei_district.gettaipei_district()),
-                          "newTaipei_district":GetAllData(newTaipei_district.getnewTaipei_districtlist())
-                          //TODO 每個list加1
+                          // "apartment_type":GetAllData(apartment_type),
+                          // "min_price":minRent,
+                          // "max_price":maxRent,
+                          // "device":GetAllData(device),
+                          // "restrict":GetAllData(restrict),
+                          // "room_type":GetAllData(room_type),
+                          // "taipei_district":GetAllData(taipei_district.gettaipei_district()),
+                          // "newTaipei_district":GetAllData(newTaipei_district.getnewTaipei_districtlist())
                         },
                       ];
-
-                      var u = jsonEncode(alldata[0]);
-                      var k = jsonDecode(u);
+                      // var u = jsonEncode(alldata[0]);
+                      // var k = jsonDecode(u);
                       //print(k['apartment.device']);
-                      print(u);
+                      //print(u);
                     }
                   },
                 ),
@@ -655,4 +604,3 @@ class _left_search_menuState extends State<left_search_menu> {
     );
   }
 }
-

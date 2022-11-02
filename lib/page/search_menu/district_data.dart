@@ -31,3 +31,35 @@ class newTaipei{
     return newTaipei_districtlist.length;
   }
 }
+class Job{
+  final List district;
+  final String min_price;
+  final String max_price;
+  final List rent_type;
+  final List apartment_type;
+  final List room_type;
+  final List restrict;
+  final List device;
+
+  Job(this.district,this.min_price,this.max_price,this.rent_type,this.apartment_type,this.room_type,this.restrict,this.device);
+  Job.fromJson(Map<String, dynamic> json)
+      : district = json['district'],
+        min_price = json['min_price'],
+        max_price = json['max_price'],
+        rent_type = json['rent_type'],
+        apartment_type = json['apartment_type'],
+        room_type = json['room_type'],
+        restrict = json['restrict'],
+        device = json['device'];
+  Map<String, dynamic> toJson() => {
+    'district': district,
+    'min_price': min_price,
+    'max_price': max_price,
+    'rent_type': rent_type,
+    'apartment_type': apartment_type,
+    'room_type': room_type,
+    'restrict': restrict,
+    'device': device,
+  };
+
+}
