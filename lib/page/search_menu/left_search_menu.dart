@@ -1,7 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:live_in/page/search_menu/district_data.dart';
+import 'package:live_in/page/search_menu/data.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/getwidget.dart';
@@ -89,8 +88,9 @@ class _left_search_menuState extends State<left_search_menu> {
   String? countryId;
   String? address;
   String? rentId;
-  String? minRent;
-  String? maxRent;
+  int max=1<<32;
+  String minRent='';
+  String maxRent='';
 
   taipei taipei_district=new taipei();
   newTaipei newTaipei_district=new newTaipei();
@@ -551,12 +551,10 @@ class _left_search_menuState extends State<left_search_menu> {
                         maxRent="40000";
                         break;
                       case'6':
-                        int max=1<<32;
                         minRent="40000";
                         maxRent=max.toString();
                         break;
                       default :
-                        int max=1<<32;
                         minRent="0";
                         maxRent=max.toString();
                     }
@@ -572,27 +570,17 @@ class _left_search_menuState extends State<left_search_menu> {
                           timeInSecForIosWeb: 3            // duration
                       );
                     }else{
-                      Job job2;
-                      Job job=new Job(GetAllData(taipei_district.gettaipei_district()), "0","1000000000", GetAllData(rent_type), GetAllData(apartment_type), GetAllData(room_type), GetAllData(restrict), GetAllData(device));
-                      job2=new Job(GetAllData(taipei_district.gettaipei_district()), "0", "10000000", rent_type, apartment_type, room_type, restrict, device);
+                      Job job=new Job(
+                          GetAllData(taipei_district.gettaipei_district()),
+                          minRent,
+                          maxRent,
+                          GetAllData(rent_type),
+                          GetAllData(apartment_type),
+                          GetAllData(room_type),
+                          GetAllData(restrict),
+                          GetAllData(device));
                       final data=job.toJson();
                       print(data);
-                      List<dynamic> alldata=[
-                        {
-                          // "apartment_type":GetAllData(apartment_type),
-                          // "min_price":minRent,
-                          // "max_price":maxRent,
-                          // "device":GetAllData(device),
-                          // "restrict":GetAllData(restrict),
-                          // "room_type":GetAllData(room_type),
-                          // "taipei_district":GetAllData(taipei_district.gettaipei_district()),
-                          // "newTaipei_district":GetAllData(newTaipei_district.getnewTaipei_districtlist())
-                        },
-                      ];
-                      // var u = jsonEncode(alldata[0]);
-                      // var k = jsonDecode(u);
-                      //print(k['apartment.device']);
-                      //print(u);
                     }
                   },
                 ),

@@ -1,17 +1,13 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
-import 'package:live_in/page/search_menu/district_data.dart';
-
+import 'package:live_in/page/search_menu/data.dart';
 
 //work
 
 class righ_search_menu extends StatefulWidget {
   const righ_search_menu({Key? key}) : super(key: key);
-
-
 
   @override
   State<righ_search_menu> createState() => _righ_search_menuState();
