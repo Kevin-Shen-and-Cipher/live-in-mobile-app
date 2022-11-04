@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.live_in">
    <application
-        android:label="live_in"
+        android:label="Liveln"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
