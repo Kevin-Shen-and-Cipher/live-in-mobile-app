@@ -64,7 +64,7 @@ class _MainPageState extends State<MainPage> {
   final screens=[
     const HomePage(),
     const SearchPage(),
-    const infoPage(),
+    infoPage(),
   ];
 
 
