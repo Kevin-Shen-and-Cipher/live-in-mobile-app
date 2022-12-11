@@ -22,7 +22,7 @@ class _SearchPageState extends State<SearchPage> {
     try {
       var response = await client.get(url);// 使用 `get()` 方法接收資料
       if (response.statusCode != 200) {// 確保請求成功
-        throw Exception('請求失敗');
+        throw Exception('請求失敗2');
       }
       final data = json.decode(response.body)as List;
       setState(() {

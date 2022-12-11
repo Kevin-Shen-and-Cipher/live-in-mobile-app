@@ -600,9 +600,6 @@ class _left_search_menuState extends State<left_search_menu> {
                       final data=job.toJson();
                       print(data);
                       PostData(data);
-
-
-
                     }
                   },
                 ),
