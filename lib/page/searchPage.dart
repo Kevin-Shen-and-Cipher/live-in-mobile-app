@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:live_in/page/search_menu/data.dart';
 import 'package:live_in/page/search_menu/righ_search_menu.dart';
 import 'search_menu/searchPage_DataDetails.dart';
 import 'search_menu/left_search_menu.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -9,8 +12,34 @@ class SearchPage extends StatefulWidget {
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
-
+  var _Getdata=[];
 class _SearchPageState extends State<SearchPage> {
+
+  receiveData() async {
+    var client = http.Client();
+    var url = Uri.parse('https://www.live-in.moonnight.software/api');
+
+    try {
+      var response = await client.get(url);// 使用 `get()` 方法接收資料
+      if (response.statusCode != 200) {// 確保請求成功
+        throw Exception('請求失敗');
+      }
+      final data = json.decode(response.body)as List;
+      setState(() {
+        _Getdata=data;
+      });
+    } catch (e) {
+      print(e);// 处理错误
+    } finally {
+      client.close();// 確保 HttpClient 在不需要時被關閉
+    }
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    receiveData();
+  }
 
   int drawerIndex=0;
 
@@ -73,9 +102,9 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 Widget buildJob(List<House> houses) => ListView.builder(
-      itemCount: houses.length,
+      itemCount: _Getdata.length,
       itemBuilder: (context, index) {
-        final house = houses[index];
+        final house = _Getdata[index];
 
         return Card(
           child: ListTile(

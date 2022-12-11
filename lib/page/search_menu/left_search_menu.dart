@@ -15,6 +15,24 @@ class left_search_menu extends StatefulWidget {
 
 class _left_search_menuState extends State<left_search_menu> {
 
+  PostData(var data)async{
+    final url ="https://www.live-in.moonnight.software/api";
+    var client=http.Client();
+    try{
+      final response=await client.post(Uri.parse(url),body:data);
+
+      if (response.statusCode != 200) {
+        throw Exception('請求失敗');
+      }
+    } catch (e) {
+      // 处理错误
+      print(e);
+    } finally {
+      // 確保 HttpClient 在不需要時被關閉
+      client.close();
+    }
+  }
+
   String getdata(List<dynamic> list,int index,String value){
     String text=jsonEncode(list[index]);
     var json=jsonDecode(text);
@@ -581,6 +599,10 @@ class _left_search_menuState extends State<left_search_menu> {
                           GetAllData(device));
                       final data=job.toJson();
                       print(data);
+                      PostData(data);
+
+
+
                     }
                   },
                 ),
