@@ -6,7 +6,7 @@ import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:http/http.dart' as http;
-import 'package:basic_utils/basic_utils.dart';
+// import 'package:basic_utils/basic_utils.dart';
 
 class left_search_menu extends StatefulWidget {
   const left_search_menu({Key? key}) : super(key: key);
@@ -31,10 +31,23 @@ class _left_search_menuState extends State<left_search_menu> {
       return json[value];
     }
   }
-  bool getbool(List<dynamic> list,int index,String value){
-    String text=jsonEncode(list[index]);
-    var json=jsonDecode(text);
-    return json[value];
+  List<dynamic> GetDistrictData(List<dynamic> listTaipei,List<dynamic> listNewTaipei){
+    List<dynamic> Returnlist=[];
+    if(countryId == '1'){
+      for(int i=0;i<listTaipei.length;i++){
+        if(listTaipei[i][1]){
+          Returnlist.add(i+1);
+        }
+      }
+    }
+    if(countryId == '2'){
+      for(int i=0;i<listNewTaipei.length;i++){
+        if(listNewTaipei[i][1]){
+          Returnlist.add(i+13);
+        }
+      }
+    }
+    return  Returnlist;
   }
   List<dynamic> GetAllData(List<dynamic> list){
     List<dynamic> Returnlist=[];
@@ -45,13 +58,7 @@ class _left_search_menuState extends State<left_search_menu> {
     }
     return  Returnlist;
   }
-  GetidData(List<dynamic> list){
-    for(int i=0;i<list.length;i++){
-      if(list[i][1]){
-        return  i+1;
-      }
-    }
-  }
+
   List<dynamic> countries = [
     {"pk": 1, "name": "台北"},
     {"pk": 2, "name": "新北"}];
@@ -379,7 +386,7 @@ class _left_search_menuState extends State<left_search_menu> {
                     }else{
                       Job job=new Job(
                           address!,
-                          GetidData(newTaipei_district.getnewTaipei_districtlist()),
+                          GetDistrictData(taipei_district.gettaipei_district(),newTaipei_district.getnewTaipei_districtlist()),
                           minRent,
                           maxRent,
                           GetAllData(rent_type),

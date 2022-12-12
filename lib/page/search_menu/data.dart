@@ -15,10 +15,6 @@ class taipei {
 }
 class newTaipei{
   List<dynamic> newTaipei_districtlist=[
-    ["中山",false],["大安",false],["信義",false],["士林",false],
-    ["內湖",false],["中正",false],["萬華",false],["松山",false],
-    ["大同",false], ["文山",false],["北投",false],["南港",false],
-
     ["板橋",false],["三重",false], ["淡水",false], ["中和",false],
     ["永和",false],["新莊",false],["新店",false], ["汐止",false],
     ["林口",false],["蘆洲",false],["土城",false],["三峽",false],
@@ -37,7 +33,7 @@ class newTaipei{
 }
 class Job{
   final String address;
-  final int district;
+  final List district;
   final String min_price;
   final String max_price;
   final List rent_type;
