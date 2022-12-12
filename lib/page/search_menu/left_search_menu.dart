@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:live_in/page/search_menu/data.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:http/http.dart' as http;
+import 'package:basic_utils/basic_utils.dart';
 
 class left_search_menu extends StatefulWidget {
   const left_search_menu({Key? key}) : super(key: key);
@@ -15,23 +17,6 @@ class left_search_menu extends StatefulWidget {
 
 class _left_search_menuState extends State<left_search_menu> {
 
-  PostData(var data)async{
-    final url ="https://www.live-in.moonnight.software/api";
-    var client=http.Client();
-    try{
-      final response=await client.post(Uri.parse(url),body:data);
-
-      if (response.statusCode != 200) {
-        throw Exception('請求失敗');
-      }
-    } catch (e) {
-      // 处理错误
-      print(e);
-    } finally {
-      // 確保 HttpClient 在不需要時被關閉
-      client.close();
-    }
-  }
 
   String getdata(List<dynamic> list,int index,String value){
     String text=jsonEncode(list[index]);
@@ -59,6 +44,13 @@ class _left_search_menuState extends State<left_search_menu> {
       }
     }
     return  Returnlist;
+  }
+  GetidData(List<dynamic> list){
+    for(int i=0;i<list.length;i++){
+      if(list[i][1]){
+        return  i+1;
+      }
+    }
   }
   List<dynamic> countries = [
     {"pk": 1, "name": "台北"},
@@ -112,6 +104,59 @@ class _left_search_menuState extends State<left_search_menu> {
 
   taipei taipei_district=new taipei();
   newTaipei newTaipei_district=new newTaipei();
+
+  static var _Getdata=[];
+  PostData(Map<String, dynamic> data)async{
+    final url ="https://www.live-in.moonnight.software/api/apartment";
+    var client=http.Client();
+    try{
+      final response=await client.post(Uri.parse(url),body:data);
+
+      if (response.statusCode != 200) {
+        throw Exception('請求失敗');
+      }
+    } catch (e) {
+      // 处理错误
+      print(e);
+    } finally {
+      // 確保 HttpClient 在不需要時被關閉
+      client.close();
+    }
+  }
+  receiveData(Map<String, dynamic> data) async {
+    var client = http.Client();
+
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    var queryString = data.entries.map((e) => '${e.key}=${e.value}').join('&');
+    var url = Uri.parse('https://www.live-in.moonnight.software/api/apartments/?$queryString');
+
+    String queryString2 = Uri(queryParameters: data).query;
+    var url2 = Uri.https('https://www.live-in.moonnight.software','/api/apartments',data);
+
+    // final stringData = data.map((key, value) => MapEntry('$key', '$value'));
+    // final queryString3 = Uri.encodeQueryComponent(stringData);
+    // final stringData = data.isEmpty ? '' : data.map((key, value) => MapEntry('$key', '$value'));
+    // final queryString3 = Uri.encodeQueryComponent(stringData);
+
+    print(url2);
+    try {
+      var response = await client.get(url2,headers: headers);// get接收資料
+
+      if (response.statusCode != 200) {// 確保請求成功
+        throw Exception('receiveData請求失敗');
+      }
+      final data = json.decode(response.body);
+      print("---分隔線----");
+      print(data);
+      setState(() {
+        _Getdata=data;
+      });
+    } catch (e) {
+      print(e);
+    } finally {
+      client.close();// 在不需要時被關閉
+    }
+  }
 
   @override
   void initState() {
@@ -275,6 +320,81 @@ class _left_search_menuState extends State<left_search_menu> {
                   ],
                 ),
               ),//新北
+              Container(//收尋
+                color: Color.fromRGBO(236, 240, 241, 300),
+                height: 50,
+                padding: EdgeInsets.only(left: 40, right: 40, bottom: 10),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueGrey,
+                  ),
+                  child: const Text(
+                    '收尋/Search',
+                    style: TextStyle(
+                      fontSize: 20, // 大小
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    switch(rentId){
+                      case '1':
+                        minRent="0";
+                        maxRent="5000";
+                        break;
+                      case'2':
+                        minRent="5000";
+                        maxRent="10000";
+                        break;
+                      case'3':
+                        minRent="10000";
+                        maxRent="20000";
+                        break;
+                      case'4':
+                        minRent="20000";
+                        maxRent="30000";
+                        break;
+                      case'5':
+                        minRent="30000";
+                        maxRent="40000";
+                        break;
+                      case'6':
+                        minRent="40000";
+                        maxRent=max.toString();
+                        break;
+                      default :
+                        minRent="0";
+                        maxRent=max.toString();
+                    }
+
+                    if(address==null|| (GetAllData(taipei_district.gettaipei_district()).isEmpty
+                        &&GetAllData(newTaipei_district.getnewTaipei_districtlist()).isEmpty)){
+                      print("error，address or district is null");
+                      Fluttertoast.showToast(
+                          backgroundColor: Colors.deepOrangeAccent,
+                          msg: "錯誤，「目前工作地址」和「位置」為必填",  // message
+                          toastLength: Toast.LENGTH_SHORT, // length
+                          gravity: ToastGravity.CENTER,    // location
+                          timeInSecForIosWeb: 3            // duration
+                      );
+                    }else{
+                      Job job=new Job(
+                          address!,
+                          GetidData(newTaipei_district.getnewTaipei_districtlist()),
+                          minRent,
+                          maxRent,
+                          GetAllData(rent_type),
+                          GetAllData(apartment_type),
+                          GetAllData(room_type),
+                          GetAllData(restrict),
+                          GetAllData(device));
+                      final data=job.toJson();
+                      print(data);
+                      receiveData(data);
+                      //PostData(data);
+                    }
+                  },
+                ),
+              ),
               Container(
                 height: 100,
                 decoration: const BoxDecoration(
@@ -531,79 +651,7 @@ class _left_search_menuState extends State<left_search_menu> {
                           ]),
                     ],
                   )),//限制
-              Container(
-                color: Color.fromRGBO(236, 240, 241, 1),
-                height: 50,
-                padding: EdgeInsets.only(left: 40, right: 40, bottom: 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey,
-                  ),
-                  child: const Text(
-                    '收尋/Search',
-                    style: TextStyle(
-                      fontSize: 20, // 大小
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () {
-                    switch(rentId){
-                      case '1':
-                        minRent="0";
-                        maxRent="5000";
-                        break;
-                      case'2':
-                        minRent="5000";
-                        maxRent="10000";
-                        break;
-                      case'3':
-                        minRent="10000";
-                        maxRent="20000";
-                        break;
-                      case'4':
-                        minRent="20000";
-                        maxRent="30000";
-                        break;
-                      case'5':
-                        minRent="30000";
-                        maxRent="40000";
-                        break;
-                      case'6':
-                        minRent="40000";
-                        maxRent=max.toString();
-                        break;
-                      default :
-                        minRent="0";
-                        maxRent=max.toString();
-                    }
 
-                    if(address==null|| (GetAllData(taipei_district.gettaipei_district()).isEmpty
-                        &&GetAllData(newTaipei_district.getnewTaipei_districtlist()).isEmpty)){
-                      print("error，address or district is null");
-                      Fluttertoast.showToast(
-                          backgroundColor: Colors.deepOrangeAccent,
-                          msg: "錯誤，「目前工作地址」和「位置」為必填",  // message
-                          toastLength: Toast.LENGTH_SHORT, // length
-                          gravity: ToastGravity.CENTER,    // location
-                          timeInSecForIosWeb: 3            // duration
-                      );
-                    }else{
-                      Job job=new Job(
-                          GetAllData(taipei_district.gettaipei_district()),
-                          minRent,
-                          maxRent,
-                          GetAllData(rent_type),
-                          GetAllData(apartment_type),
-                          GetAllData(room_type),
-                          GetAllData(restrict),
-                          GetAllData(device));
-                      final data=job.toJson();
-                      print(data);
-                      PostData(data);
-                    }
-                  },
-                ),
-              )
             ],
           ),
         ),
