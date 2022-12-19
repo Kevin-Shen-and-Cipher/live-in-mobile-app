@@ -6,7 +6,7 @@ import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:http/http.dart' as http;
-// import 'package:basic_utils/basic_utils.dart';
+import 'package:basic_utils/basic_utils.dart';
 
 class left_search_menu extends StatefulWidget {
   const left_search_menu({Key? key}) : super(key: key);
@@ -36,14 +36,14 @@ class _left_search_menuState extends State<left_search_menu> {
     if(countryId == '1'){
       for(int i=0;i<listTaipei.length;i++){
         if(listTaipei[i][1]){
-          Returnlist.add(i+1);
+          Returnlist.add((i+1).toString());
         }
       }
     }
     if(countryId == '2'){
       for(int i=0;i<listNewTaipei.length;i++){
         if(listNewTaipei[i][1]){
-          Returnlist.add(i+13);
+          Returnlist.add((i+13).toString());
         }
       }
     }
@@ -53,7 +53,7 @@ class _left_search_menuState extends State<left_search_menu> {
     List<dynamic> Returnlist=[];
     for(int i=0;i<list.length;i++){
       if(list[i][1]){
-        Returnlist.add(i+1);
+        Returnlist.add((i+1).toString());
       }
     }
     return  Returnlist;
@@ -134,30 +134,39 @@ class _left_search_menuState extends State<left_search_menu> {
     var client = http.Client();
 
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-    var queryString = data.entries.map((e) => '${e.key}=${e.value}').join('&');
-    var url = Uri.parse('https://www.live-in.moonnight.software/api/apartments/?$queryString');
+    var url=Uri(
+        scheme: 'https',
+        host: 'www.live-in.moonnight.software',
+        path: 'api/apartments/',
+        queryParameters: {
+          'address': address!,
+          'district': GetDistrictData(taipei_district.gettaipei_district(),newTaipei_district.getnewTaipei_districtlist()),
+          'min_price': minRent,
+          'max_price': maxRent,
+          'rent_type': GetAllData(rent_type),
+          'apartment_type': GetAllData(apartment_type),
+          'room_type': GetAllData(room_type),
+          'restrict': GetAllData(restrict),
+          'device': GetAllData(device)
+        }
+    );
 
-    String queryString2 = Uri(queryParameters: data).query;
-    var url2 = Uri.https('https://www.live-in.moonnight.software','/api/apartments',data);
-
-    // final stringData = data.map((key, value) => MapEntry('$key', '$value'));
-    // final queryString3 = Uri.encodeQueryComponent(stringData);
-    // final stringData = data.isEmpty ? '' : data.map((key, value) => MapEntry('$key', '$value'));
-    // final queryString3 = Uri.encodeQueryComponent(stringData);
-
-    print(url2);
+    print(url);
     try {
-      var response = await client.get(url2,headers: headers);// get接收資料
+      var response = await client.get(url,headers: headers);// get接收資料
 
       if (response.statusCode != 200) {// 確保請求成功
+
         throw Exception('receiveData請求失敗');
       }
-      final data = json.decode(response.body);
+      final data = json.decode(utf8.decode(response.bodyBytes));
+
+      // json.decode(response.body);
       print("---分隔線----");
       print(data);
-      setState(() {
-        _Getdata=data;
-      });
+      _Getdata.add(data);
+      print("---分隔線----");
+      print(_Getdata);
     } catch (e) {
       print(e);
     } finally {
@@ -384,6 +393,8 @@ class _left_search_menuState extends State<left_search_menu> {
                           timeInSecForIosWeb: 3            // duration
                       );
                     }else{
+
+
                       Job job=new Job(
                           address!,
                           GetDistrictData(taipei_district.gettaipei_district(),newTaipei_district.getnewTaipei_districtlist()),
@@ -397,7 +408,7 @@ class _left_search_menuState extends State<left_search_menu> {
                       final data=job.toJson();
                       print(data);
                       receiveData(data);
-                      //PostData(data);
+
                     }
                   },
                 ),
