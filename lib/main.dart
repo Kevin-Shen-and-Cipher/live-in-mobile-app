@@ -5,9 +5,6 @@ import 'package:dropdown_button_plus/dropdown_plus.dart' as plus;
 import 'package:live_in/page/infoPage.dart';
 import 'page/homePage.dart';
 import 'page/searchPage.dart';
-//test
-//testoop
-
 
 void main()=>runApp(MaterialApp(title: 'app',
   home: new MyApp(),

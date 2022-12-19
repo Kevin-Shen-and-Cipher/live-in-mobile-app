@@ -17,20 +17,6 @@ class left_search_menu extends StatefulWidget {
 
 class _left_search_menuState extends State<left_search_menu> {
 
-
-  String getdata(List<dynamic> list,int index,String value){
-    String text=jsonEncode(list[index]);
-    var json=jsonDecode(text);
-    // print(json["fields"]);
-    if(value=='name'){
-      var valuetext=jsonEncode(json["fields"]);
-      var ans=jsonDecode(valuetext);
-      return ans[value];
-    }
-    else{
-      return json[value];
-    }
-  }
   List<dynamic> GetDistrictData(List<dynamic> listTaipei,List<dynamic> listNewTaipei){
     List<dynamic> Returnlist=[];
     if(countryId == '1'){
@@ -112,7 +98,7 @@ class _left_search_menuState extends State<left_search_menu> {
   taipei taipei_district=new taipei();
   newTaipei newTaipei_district=new newTaipei();
 
-  static var Getdata=[];
+  static var Getleftdata=[];
   PostData(Map<String, dynamic> data)async{
     final url ="https://www.live-in.moonnight.software/api/apartment";
     var client=http.Client();
@@ -164,9 +150,9 @@ class _left_search_menuState extends State<left_search_menu> {
       // json.decode(response.body);
       print("---分隔線----");
       print(data);
-      Getdata.add(data);
+      Getleftdata.add(data);
       print("---分隔線----");
-      print(Getdata);
+      print(Getleftdata);
     } catch (e) {
       print(e);
     } finally {

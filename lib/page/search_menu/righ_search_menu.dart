@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:live_in/page/search_menu/data.dart';
+import 'package:http/http.dart' as http;
 
 //work
 
@@ -14,42 +16,43 @@ class righ_search_menu extends StatefulWidget {
 }
 
 class _righ_search_menuState extends State<righ_search_menu> {
-
-  String getdata(List<dynamic> list,int index,String value){
-    String text=jsonEncode(list[index]);
-    var json=jsonDecode(text);
-    // print(json["fields"]);
-    if(value=='name'){
-      var valuetext=jsonEncode(json["fields"]);
-      var ans=jsonDecode(valuetext);
-      return ans[value];
+  List<dynamic> GetDistrictData(List<dynamic> listTaipei,List<dynamic> listNewTaipei){
+    List<dynamic> Returnlist=[];
+    if(countryId == '1'){
+      for(int i=0;i<listTaipei.length;i++){
+        if(listTaipei[i][1]){
+          Returnlist.add((i+1).toString());
+        }
+      }
     }
-    else{
-      return json[value];
+    if(countryId == '2'){
+      for(int i=0;i<listNewTaipei.length;i++){
+        if(listNewTaipei[i][1]){
+          Returnlist.add((i+13).toString());
+        }
+      }
     }
-  }
-  bool getbool(List<dynamic> list,int index,String value){
-    String text=jsonEncode(list[index]);
-    var json=jsonDecode(text);
-    return json[value];
+    return  Returnlist;
   }
   List<dynamic> GetAllData(List<dynamic> list){
     List<dynamic> Returnlist=[];
     for(int i=0;i<list.length;i++){
       if(list[i][1]){
-        Returnlist.add(i);
+        Returnlist.add((i+1).toString());
       }
     }
     return  Returnlist;
   }
+
+  static var Getrightdata=[];
   List<dynamic> countries=[
     {"id":1,"name":"台北"},
     {"id":2,"name":"新北"},];
-  List<dynamic> salary=[
+  List<dynamic> min_salary=[
     {"id":1,"name":"月薪3萬up"},
     {"id":2,"name":"月薪4萬up"},
     {"id":3,"name":"月薪5萬up"},];
-  List<dynamic> job=[
+  List<dynamic> job_position=[
     ["軟體工程師",false],
     ["演算法工程師",false],
     ["前端工程師",false],
@@ -59,11 +62,52 @@ class _righ_search_menuState extends State<righ_search_menu> {
     ["晚班",false],
     ["大夜班",false],
     ["假日班",false],
-    ["輪班",false]];
+    ["輪班",false],
+    ["不須輪班",false]];
 
+  receiveData() async {
+    var client = http.Client();
+
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    var url=Uri(
+        scheme: 'https',
+        host: 'www.live-in.moonnight.software',
+        path: 'api/jobs/',
+        queryParameters: {
+          'address': address!,
+          'district': GetDistrictData(taipei_district.gettaipei_district(),newTaipei_district.getnewTaipei_districtlist()),
+          'min_salary': salary,
+          'job_position': GetAllData(job_position),
+          'work_hour': GetAllData(work_hour),
+        }
+    );
+    print(url);
+    try {
+      var response = await client.get(url,headers: headers);// get接收資料
+
+      if (response.statusCode != 200) {// 確保請求成功
+
+        throw Exception('receiveData請求失敗');
+      }
+      final data = json.decode(utf8.decode(response.bodyBytes));
+
+      // json.decode(response.body);
+      print("---分隔線----");
+      print(data);
+      Getrightdata.add(data);
+      print("---分隔線----");
+      print(Getrightdata);
+    } catch (e) {
+      print(e);
+    } finally {
+      client.close();// 在不需要時被關閉
+    }
+  }
+
+  String? address;
   String? countryId;
   String? salaryId;
-  String? address;
+  String? salary;
 
   taipei taipei_district=new taipei();
   newTaipei newTaipei_district=new newTaipei();
@@ -231,6 +275,50 @@ class _righ_search_menuState extends State<righ_search_menu> {
                     ],
                   ),
                 ),
+              Container(
+                color: Color.fromRGBO(236,240,241,300),
+                height: 50,
+                padding: EdgeInsets.only(left: 40,right: 40,bottom: 10),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueGrey,),
+                  child: const Text('收尋',
+                    style: TextStyle(
+                      fontSize: 20,                          // 大小
+                      fontWeight: FontWeight.bold,),
+                  ),
+                  onPressed: () {
+                    if(address==null|| (GetAllData(taipei_district.gettaipei_district()).isEmpty
+                        &&GetAllData(newTaipei_district.getnewTaipei_districtlist()).isEmpty)){
+                      print("error，address or district is null $address");
+                      Fluttertoast.showToast(
+                          backgroundColor: Colors.deepOrangeAccent,
+                          msg: "錯誤，「目前工作地址」和「位置」為必填",  // message
+                          toastLength: Toast.LENGTH_SHORT, // length
+                          gravity: ToastGravity.CENTER,    // location
+                          timeInSecForIosWeb: 3            // duration
+                      );
+                      switch(salaryId){
+                        case '1':
+                          salary="0";
+                          break;
+                        case'2':
+                          salary="1";
+                          break;
+                        case'3':
+                          salary="2";
+                          break;
+                        case'4':
+                          salary="3";
+                          break;
+                      }
+                    }else{
+                      receiveData();
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ),
 
               Container(
                 height: 100,
@@ -256,7 +344,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
                       context,
                       "Select Salary",
                       this.salaryId,
-                      this.salary,
+                      this.min_salary,
                           (onChangedVal){
                         this.salaryId = onChangedVal;
                         print("Selected Salary:$onChangedVal");
@@ -276,7 +364,6 @@ class _righ_search_menuState extends State<righ_search_menu> {
                   ],
                 ),
               ),
-
               Container(
                   color: Color.fromRGBO(236,240,241,1),
                   height: 150,
@@ -296,10 +383,10 @@ class _righ_search_menuState extends State<righ_search_menu> {
                           spacing: 8.0, // 主轴(水平)方向间距
                           runSpacing: 4.0, // 纵轴（垂直）方向间距
                           children: <Widget>[
-                            for(int i=0;i<job.length;i++)
+                            for(int i=0;i<job_position.length;i++)
                               InputChip(
-                                  selected: job[i][1],
-                                  label: Text(job[i][0]),
+                                  selected: job_position[i][1],
+                                  label: Text(job_position[i][0]),
                                   labelStyle: TextStyle(color: Colors.white),
                                   avatar: Icon(Icons.add,),
                                   backgroundColor: Colors.black54,
@@ -307,8 +394,8 @@ class _righ_search_menuState extends State<righ_search_menu> {
                                   onPressed: () {
 
                                     setState(() {
-                                      job[i][1] = !job[i][1];
-                                      print(job[i][0]+' is '+(job[i][1]).toString(),);
+                                      job_position[i][1] = !job_position[i][1];
+                                      print(job_position[i][0]+' is '+(job_position[i][1]).toString(),);
                                     });
                                   }
                               ),
@@ -357,47 +444,6 @@ class _righ_search_menuState extends State<righ_search_menu> {
                     ],
                   )
               ),
-              Container(
-                color: Color.fromRGBO(236,240,241,1),
-                height: 50,
-                padding: EdgeInsets.only(left: 40,right: 40,bottom: 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey,),
-                  child: const Text('收尋',
-                    style: TextStyle(
-                      fontSize: 20,                          // 大小
-                      fontWeight: FontWeight.bold,),
-                  ),
-                  onPressed: () {
-                    if(address==null|| (GetAllData(taipei_district.gettaipei_district()).isEmpty
-                        &&GetAllData(newTaipei_district.getnewTaipei_districtlist()).isEmpty)){
-                      print("error，address or district is null $address");
-                      Fluttertoast.showToast(
-                          backgroundColor: Colors.deepOrangeAccent,
-                          msg: "錯誤，「目前工作地址」和「位置」為必填",  // message
-                          toastLength: Toast.LENGTH_SHORT, // length
-                          gravity: ToastGravity.CENTER,    // location
-                          timeInSecForIosWeb: 3            // duration
-                      );
-                    }else{
-                      List<dynamic> alldata=[
-                        {
-                          "min_salary":(salaryId),
-                          "job_position":GetAllData(job),
-                          "working_hour":GetAllData(work_hour),
-                          "taipei_district":GetAllData(taipei_district.gettaipei_district()),
-                          "newTaipei_districtlist":GetAllData(newTaipei_district.getnewTaipei_districtlist())
-                        },
-                      ];
-                      var u = jsonEncode(alldata[0]);
-                      var k = jsonDecode(u);
-                      //print(k['apartment.device']);
-                      print(u);
-                    }
-                  },
-                ),
-              )
             ],
           ),
         ),
