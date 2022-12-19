@@ -112,7 +112,7 @@ class _left_search_menuState extends State<left_search_menu> {
   taipei taipei_district=new taipei();
   newTaipei newTaipei_district=new newTaipei();
 
-  static var _Getdata=[];
+  static var Getdata=[];
   PostData(Map<String, dynamic> data)async{
     final url ="https://www.live-in.moonnight.software/api/apartment";
     var client=http.Client();
@@ -130,7 +130,7 @@ class _left_search_menuState extends State<left_search_menu> {
       client.close();
     }
   }
-  receiveData(Map<String, dynamic> data) async {
+  receiveData() async {
     var client = http.Client();
 
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
@@ -164,9 +164,9 @@ class _left_search_menuState extends State<left_search_menu> {
       // json.decode(response.body);
       print("---分隔線----");
       print(data);
-      _Getdata.add(data);
+      Getdata.add(data);
       print("---分隔線----");
-      print(_Getdata);
+      print(Getdata);
     } catch (e) {
       print(e);
     } finally {
@@ -393,22 +393,8 @@ class _left_search_menuState extends State<left_search_menu> {
                           timeInSecForIosWeb: 3            // duration
                       );
                     }else{
-
-
-                      Job job=new Job(
-                          address!,
-                          GetDistrictData(taipei_district.gettaipei_district(),newTaipei_district.getnewTaipei_districtlist()),
-                          minRent,
-                          maxRent,
-                          GetAllData(rent_type),
-                          GetAllData(apartment_type),
-                          GetAllData(room_type),
-                          GetAllData(restrict),
-                          GetAllData(device));
-                      final data=job.toJson();
-                      print(data);
-                      receiveData(data);
-
+                      receiveData();
+                      Navigator.pop(context);
                     }
                   },
                 ),

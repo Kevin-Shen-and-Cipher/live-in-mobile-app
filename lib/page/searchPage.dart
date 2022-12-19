@@ -7,6 +7,7 @@ import 'search_menu/left_search_menu.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
 
@@ -23,6 +24,8 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   int drawerIndex=0;
+
+
 
   List<House> houses = getHouses();
   static const List<dynamic> testdata = [
