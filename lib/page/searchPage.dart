@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:live_in/page/search_menu/data.dart';
 import 'package:live_in/page/search_menu/left_search_menu.dart';
 import 'package:live_in/page/search_menu/righ_search_menu.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'search_menu/searchPage_DataDetails.dart';
-import 'search_menu/left_search_menu.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-
 class SearchPage extends StatefulWidget {
+
   const SearchPage({Key? key}) : super(key: key);
 
   @override
@@ -16,7 +15,6 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -24,26 +22,6 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   int drawerIndex=0;
-
-
-
-  List<House> houses = getHouses();
-  static const List<dynamic> testdata = [
-    {"title": "i am title1", "abc": "i am abc1"},
-    {"title": "i am title2", "abc": "i am abc2"},
-    {"title": "i am title3", "abc": "i am abc3"},
-    {"title": "i am title4", "abc": "i am abc4"},
-    {"title": "i am title5", "abc": "i am abc5"},
-    {"title": "i am title6", "abc": "i am abc6"},
-    {"title": "i am title7", "abc": "i am abc7"},
-    {"title": "i am title8", "abc": "i am abc8"},
-    {"title": "i am title9", "abc": "i am abc9"},
-    {"title": "i am title10", "abc": "i am abc10"},
-  ];
-  static List<House> getHouses() {
-    return testdata.map<House>(House.fromJson).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,48 +57,71 @@ class _SearchPageState extends State<SearchPage> {
       drawer: left_search_menu(),
       endDrawer: righ_search_menu(),
       body: Center(
-        child: buildJob(getHouses()),
+        child: buildJob(),
       ),
     );
   }
 }
 
-Widget buildJob(List<House> houses) => ListView.builder(
-      itemCount: houses.length,
+Widget buildJob() => ListView.builder(
+
+      itemCount: Getleftdata.length,
       itemBuilder: (context, index) {
-        final house = houses[index];
+        final apartment = Getleftdata[index];
 
         return Card(
-          child: ListTile(
-            leading: CircleAvatar(
-              radius: 28,
-              backgroundColor: Colors.red,
-            ),
-            title: Text(house.title),
-            subtitle: Text(house.abc),
-            onTap:(){
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (context)=>dataDetail()));},
+          child: Padding(
+          padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+          child: Column( //用Column讓兩排文字可以垂直排列
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 8.0), //兩排文字間距用透明的box隔開
+              Text(apartment.getTitle(),style:TextStyle(fontSize: 21),),
+              ListTile(
+                title: Text(apartment.getAdress(),style:TextStyle(fontSize: 19)),
+                subtitle: Text(apartment.getDistrict()["city"]["name"]+" "+apartment.getDistrict()["name"],style:TextStyle(fontSize: 18),textAlign: TextAlign.start,),
+              ),
+              Row(
+                children: [
+                  Text("格局:："+apartment.getRoomType()["name"],style:TextStyle(fontSize: 14),),
+                  SizedBox(width: 15,),
+                  Text("房子類型："+apartment.getApartmentType()["name"],style:TextStyle(fontSize: 14),),
+                  SizedBox(width: 15,),
+                  Text("租賃類型："+apartment.getRentType()["name"],style:TextStyle(fontSize: 14),),
+                ],
+              ),
+              Row(
+                children: [
+                  ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueGrey,
+                    onPrimary: Colors.white, // foreground
+                  ),
+                    onPressed: ()async{
+                    Uri url = Uri.parse(apartment.getUrl());
+                    if (await canLaunch(url.toString())) {
+                      await launch(url.toString());
+                    } else {
+                      print(apartment.getUrl());
+                      throw 'Could not launch $url';
+                    }
+                    },
+                  child: Text('前往查看'),
+                ),
+                  SizedBox(width: 150,),
+                  Text("租金:"+apartment.getPrice().toString(),style:TextStyle(color: Colors.redAccent,fontSize: 20,fontWeight: FontWeight.bold)),
+                ],
+              )
+            ]
+          ),
           ),
         );
       },
     );
 
-class House {
-  final String title;
-  final String abc;
-
-  House({required this.title, required this.abc});
-
-  // static House.fromJson(Map<String, dynamic> json)
-  //     : title = json['title'],
-  //       abc = json['abc'];
-  static House fromJson(json) => House(
-        title: json["title"],
-        abc: json["abc"],
-      );
-  Map<String, dynamic> toJson() => {
-        'title': title,
-        'abc': abc,
-      };
+Future<dynamic>_launchUrl(String url) async {
+  Uri _url = Uri.parse(url);
+  if (!await launchUrl(_url)) {
+    throw 'Could not launch $_url';
+  }
 }

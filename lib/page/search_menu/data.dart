@@ -45,40 +45,32 @@ class Apartment{
    List<dynamic>? _restrict;
    Map<String,dynamic>? _room_type;
    List<dynamic>? _surroundingFacility;
-
+   String? _url;
 
   Apartment( Map<String, dynamic> data){
     this._address=data["address"];
-    print("address");
     this._apartment_type=data["apartment_type"];
-    print("type");
     this._device=data["device"];
-    print("device");
     this._district=data["district"];
-    print("district");
     this._title=data["name"];
-    print("name");
     this._price=data["price"];
-    print("price");
     this._rent_type=data["rent_type"];
-    print("rent_type");
     this._restrict=data["restrict"];
-    print("restrict");
     this._room_type=data["room_type"];
-    print("room_type");
     this._surroundingFacility=data["surroundingfacility"];
-    print("surroundingfacility");
+    this._url=data["url"];
   }
-   String? getAdress(){return _address;}
+   String?                getAdress(){return _address;}
    Map <String ,dynamic>? getApartmentType(){return _apartment_type;}
-   List<dynamic>? getDevice(){return _device;}
+   List<dynamic>?         getDevice(){return _device;}
    Map <String ,dynamic>? getDistrict(){return _district;}
-   String? getTitle(){return _title;}
-   int? getPrice(){return _price;}
-   Map<String,dynamic>? getRentType(){return _rent_type;}
-   List<dynamic>? getRestrict(){return _restrict;}
-   Map<String,dynamic>? getRoomType(){return _room_type;}
-   List<dynamic>? getSurroundingFacility(){return _surroundingFacility;}
+   String?                getTitle(){return _title;}
+   int?                   getPrice(){return _price;}
+   Map<String,dynamic>?   getRentType(){return _rent_type;}
+   List<dynamic>?         getRestrict(){return _restrict;}
+   Map<String,dynamic>?   getRoomType(){return _room_type;}
+   List<dynamic>?         getSurroundingFacility(){return _surroundingFacility;}
+   String?                getUrl(){return _url;}
 
  }
 
@@ -120,3 +112,45 @@ class Job{
   };
 
 }
+List<dynamic> countries = [
+  {"pk": 1, "name": "台北"},
+  {"pk": 2, "name": "新北"}];
+List<dynamic> rent=[
+  {"pk": 1, "name": "0~5000"},
+  {"pk": 2, "name": "5000~10000"},
+  {"pk": 3, "name": "10000~20000"},
+  {"pk": 4, "name": "20000~30000"},
+  {"pk": 5, "name": "30000~40000"},
+  {"pk": 6, "name": "40000以上"},];
+List<dynamic> rent_type = [
+  ["透天", false],
+  ["獨立套房", false],
+  ["分租套房", false],
+  ["雅房", false]];
+List<dynamic> facility_type = [
+  ["捷運", false],
+  ["公車", false],
+  ["學校", false]];
+List<dynamic> room_type = [
+  ["一房", false],
+  ["二房", false],
+  ["三房", false],
+  ["四房以上", false]];
+List<dynamic> apartment_type = [
+  ["公寓", false],
+  ["大樓", false],
+  ["透天", false],
+  ["別墅", false]];
+List<dynamic> device = [
+  ["冷氣", false],
+  ["洗衣機", false],
+  ["冰箱", false],
+  ["熱水器", false],
+  ["天然瓦斯", false],
+  ["網路", false],
+  ["床", false]];
+List<dynamic> restrict = [
+  ["男女皆可", false],
+  ["限男", false],
+  ["限女", false],
+  ["排除頂樓加蓋", false]];

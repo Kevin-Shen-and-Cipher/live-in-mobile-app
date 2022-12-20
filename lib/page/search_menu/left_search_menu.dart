@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:live_in/page/search_menu/data.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:http/http.dart' as http;
-import 'package:basic_utils/basic_utils.dart';
+
+var Getleftdata=[];
 
 class left_search_menu extends StatefulWidget {
   const left_search_menu({Key? key}) : super(key: key);
-
   @override
   State<left_search_menu> createState() => _left_search_menuState();
 }
@@ -44,63 +43,6 @@ class _left_search_menuState extends State<left_search_menu> {
     }
     return  Returnlist;
   }
-
-  List<dynamic> countries = [
-    {"pk": 1, "name": "台北"},
-    {"pk": 2, "name": "新北"}];
-  List<dynamic> rent=[
-    {"pk": 1, "name": "0~5000"},
-    {"pk": 2, "name": "5000~10000"},
-    {"pk": 3, "name": "10000~20000"},
-    {"pk": 4, "name": "20000~30000"},
-    {"pk": 5, "name": "30000~40000"},
-    {"pk": 6, "name": "40000以上"},];
-  List<dynamic> rent_type = [
-    ["透天", false],
-    ["獨立套房", false],
-    ["分租套房", false],
-    ["雅房", false]];
-  List<dynamic> facility_type = [
-    ["捷運", false],
-    ["公車", false],
-    ["學校", false]];
-  List<dynamic> room_type = [
-    ["一房", false],
-    ["二房", false],
-    ["三房", false],
-    ["四房以上", false]];
-  List<dynamic> apartment_type = [
-    ["公寓", false],
-    ["大樓", false],
-    ["透天", false],
-    ["別墅", false]];
-  List<dynamic> device = [
-    ["冷氣", false],
-    ["洗衣機", false],
-    ["冰箱", false],
-    ["熱水器", false],
-    ["天然瓦斯", false],
-    ["網路", false],
-    ["床", false]];
-  List<dynamic> restrict = [
-    ["男女皆可", false],
-    ["限男", false],
-    ["限女", false],
-    ["排除頂樓加蓋", false]];
-
-  String? countryId;
-  String? address;
-  String? rentId;
-  int max=1<<32;
-  String minRent='';
-  String maxRent='';
-
-  taipei taipei_district=new taipei();
-  newTaipei newTaipei_district=new newTaipei();
-
-  static var Getleftdata=[];
-
-
   receiveData() async {
     var client = http.Client();
 
@@ -121,52 +63,36 @@ class _left_search_menuState extends State<left_search_menu> {
           'device': GetAllData(device)
         }
     );
-
     print(url);
     try {
       var response = await client.get(url,headers: headers);// get接收資料
 
       if (response.statusCode != 200) {// 確保請求成功
-
         throw Exception('receiveData請求失敗');
       }
       var data = json.decode(utf8.decode(response.bodyBytes));
-
-      print("---分隔線----");
-      // print(data);
-      // print(data.length);
+      print("---資料獲取成功----");
 
       for(int i=0;i<data.length;i++){
-        //print(data[i].runtimeType);
-         //print(data[i]);
-        // var pemp =data[i];
-        // print(pemp["address"]);
-        // print(pemp["apartment_type"]);
-        // print(pemp["device"]);
-        // print(pemp["district"]);
-        // print(pemp["name"]);
-        // print(pemp["price"]);
-        // print(pemp["rent_type"]);
-        // print(pemp["restrict"]);
-        // print(pemp["room_type"]);
-        // print(pemp["surroundingfacility"]);
-
         Getleftdata.add(new Apartment(new Map<String, dynamic>.from(data[i])));
       }
-      for (var age in Getleftdata) {
-        print(age.getAdress());   }
-
     } catch (e) {
       print(e);
     } finally {
       client.close();// 在不需要時被關閉
     }
   }
+  taipei taipei_district=new taipei();
+  newTaipei newTaipei_district=new newTaipei();
+  String? countryId;
+  String? address;
+  String? rentId;
+  String minRent='';
+  String maxRent='';
+  int max=1<<32;
 
   @override
-  void initState() {
-    super.initState();
-  }
+  void initState() {super.initState();}
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -190,7 +116,7 @@ class _left_search_menuState extends State<left_search_menu> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
+              ),//標題
               Container(
                   height: 100,
                   decoration: const BoxDecoration(
@@ -213,7 +139,7 @@ class _left_search_menuState extends State<left_search_menu> {
                       address=text;
                       print(address);
                     },
-                  )),
+                  )),//填寫工作地址
               Container(
                 height: 100,
                 decoration: const BoxDecoration(
@@ -243,7 +169,7 @@ class _left_search_menuState extends State<left_search_menu> {
                       context,
                       "Select County",
                       this.countryId,
-                      this.countries,
+                      countries,
                       (onChangedVal) {
                         this.countryId = onChangedVal;
                         print("Selected County:$onChangedVal");
@@ -325,7 +251,7 @@ class _left_search_menuState extends State<left_search_menu> {
                   ],
                 ),
               ),//新北
-              Container(//收尋
+              Container(
                 color: Color.fromRGBO(236, 240, 241, 300),
                 height: 50,
                 padding: EdgeInsets.only(left: 40, right: 40, bottom: 10),
@@ -387,7 +313,7 @@ class _left_search_menuState extends State<left_search_menu> {
                     }
                   },
                 ),
-              ),
+              ),//收尋
               Container(
                 height: 100,
                 decoration: const BoxDecoration(
@@ -412,7 +338,7 @@ class _left_search_menuState extends State<left_search_menu> {
                       context,
                       "Select rent",
                       this.rentId,
-                      this.rent,
+                      rent,
                           (onChangedVal) {
                         this.rentId = onChangedVal;
                         print("Selected rent:$onChangedVal");
@@ -429,7 +355,7 @@ class _left_search_menuState extends State<left_search_menu> {
                     ),
                   ],
                 ),
-              ),
+              ),//租金
               Container(
                   color: Color.fromRGBO(236, 240, 241, 1),
                   height: 150,
@@ -644,7 +570,6 @@ class _left_search_menuState extends State<left_search_menu> {
                           ]),
                     ],
                   )),//限制
-
             ],
           ),
         ),

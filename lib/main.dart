@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dropdown_button_plus/dropdown_plus.dart' as plus;
-
 import 'package:live_in/page/infoPage.dart';
 import 'page/homePage.dart';
 import 'page/searchPage.dart';
@@ -91,6 +88,5 @@ class _MainPageState extends State<MainPage> {
       ),
     );}
 }
-//___________home__________
 
 
