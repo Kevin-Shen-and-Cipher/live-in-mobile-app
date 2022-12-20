@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 class taipei {
@@ -31,6 +33,58 @@ class newTaipei{
     return newTaipei_districtlist.length;
   }
 }
+
+class Apartment{
+   String? _address;
+   Map <String ,dynamic>? _apartment_type;
+   List<dynamic>? _device;
+   Map <String ,dynamic>? _district;
+   String? _title;
+   int? _price;
+   Map<String,dynamic>? _rent_type;
+   List<dynamic>? _restrict;
+   Map<String,dynamic>? _room_type;
+   List<dynamic>? _surroundingFacility;
+
+
+  Apartment( Map<String, dynamic> data){
+    this._address=data["address"];
+    print("address");
+    this._apartment_type=data["apartment_type"];
+    print("type");
+    this._device=data["device"];
+    print("device");
+    this._district=data["district"];
+    print("district");
+    this._title=data["name"];
+    print("name");
+    this._price=data["price"];
+    print("price");
+    this._rent_type=data["rent_type"];
+    print("rent_type");
+    this._restrict=data["restrict"];
+    print("restrict");
+    this._room_type=data["room_type"];
+    print("room_type");
+    this._surroundingFacility=data["surroundingfacility"];
+    print("surroundingfacility");
+  }
+   String? getAdress(){return _address;}
+   Map <String ,dynamic>? getApartmentType(){return _apartment_type;}
+   List<dynamic>? getDevice(){return _device;}
+   Map <String ,dynamic>? getDistrict(){return _district;}
+   String? getTitle(){return _title;}
+   int? getPrice(){return _price;}
+   Map<String,dynamic>? getRentType(){return _rent_type;}
+   List<dynamic>? getRestrict(){return _restrict;}
+   Map<String,dynamic>? getRoomType(){return _room_type;}
+   List<dynamic>? getSurroundingFacility(){return _surroundingFacility;}
+
+ }
+
+
+
+
 class Job{
   final String address;
   final List district;

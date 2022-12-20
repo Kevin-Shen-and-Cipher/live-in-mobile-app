@@ -99,23 +99,8 @@ class _left_search_menuState extends State<left_search_menu> {
   newTaipei newTaipei_district=new newTaipei();
 
   static var Getleftdata=[];
-  PostData(Map<String, dynamic> data)async{
-    final url ="https://www.live-in.moonnight.software/api/apartment";
-    var client=http.Client();
-    try{
-      final response=await client.post(Uri.parse(url),body:data);
 
-      if (response.statusCode != 200) {
-        throw Exception('請求失敗');
-      }
-    } catch (e) {
-      // 处理错误
-      print(e);
-    } finally {
-      // 確保 HttpClient 在不需要時被關閉
-      client.close();
-    }
-  }
+
   receiveData() async {
     var client = http.Client();
 
@@ -145,14 +130,32 @@ class _left_search_menuState extends State<left_search_menu> {
 
         throw Exception('receiveData請求失敗');
       }
-      final data = json.decode(utf8.decode(response.bodyBytes));
+      var data = json.decode(utf8.decode(response.bodyBytes));
 
-      // json.decode(response.body);
       print("---分隔線----");
-      print(data);
-      Getleftdata.add(data);
-      print("---分隔線----");
-      print(Getleftdata);
+      // print(data);
+      // print(data.length);
+
+      for(int i=0;i<data.length;i++){
+        //print(data[i].runtimeType);
+         //print(data[i]);
+        // var pemp =data[i];
+        // print(pemp["address"]);
+        // print(pemp["apartment_type"]);
+        // print(pemp["device"]);
+        // print(pemp["district"]);
+        // print(pemp["name"]);
+        // print(pemp["price"]);
+        // print(pemp["rent_type"]);
+        // print(pemp["restrict"]);
+        // print(pemp["room_type"]);
+        // print(pemp["surroundingfacility"]);
+
+        Getleftdata.add(new Apartment(new Map<String, dynamic>.from(data[i])));
+      }
+      for (var age in Getleftdata) {
+        print(age.getAdress());   }
+
     } catch (e) {
       print(e);
     } finally {
