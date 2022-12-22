@@ -17,10 +17,9 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    //print("initState");
   }
-
   int drawerIndex=0;
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,11 @@ class _SearchPageState extends State<SearchPage> {
             return IconButton(
               icon: Icon(Icons.house),
               onPressed: () {
-                Scaffold.of(context).openDrawer();
+                //Scaffold.of(context).openDrawer();
+                Navigator.push(context,MaterialPageRoute(
+                    builder: (BuildContext contest){
+                  return left_search_menu();
+                })).then((_) => setState(() {}));
               },
             );
           },
@@ -47,7 +50,11 @@ class _SearchPageState extends State<SearchPage> {
               return IconButton(
                 icon: Icon(Icons.work),
                 onPressed: () {
-                  Scaffold.of(context).openEndDrawer();
+                  //Scaffold.of(context).openEndDrawer();
+                  Navigator.push(context,MaterialPageRoute(
+                      builder: (BuildContext contest){
+                        return righ_search_menu();
+                      })).then((_) => setState(() {}));
                 },
               );
             },

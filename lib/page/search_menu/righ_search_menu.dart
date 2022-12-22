@@ -114,27 +114,20 @@ class _righ_search_menuState extends State<righ_search_menu> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SafeArea(
+        child:
+    Container(
       width: 350,
-      child:Drawer(
-        child: Container(
+      child:Scaffold(
+        appBar:AppBar(
+          title: Text('找房子',),
+          centerTitle: true,
+          backgroundColor: Color.fromRGBO(147,197,253,1),
+        ),
+        body: Container(
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              Container(
-                color: const Color.fromRGBO(147,197,253,1),
-                height: 80,
-                padding: EdgeInsets.only(top: 35),
-                child: const Text(
-                  "找工作",
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,                          // 大小
-                    fontWeight: FontWeight.bold,),
-                ),
-              ),
               Container(
                   height: 100,
                   //rgba(236, 240, 241,1.0)
@@ -191,20 +184,20 @@ class _righ_search_menuState extends State<righ_search_menu> {
                       this.countryId,
                       this.countries,
                           (onChangedVal){
-                            this.countryId = onChangedVal;
-                            print("Selected County:$onChangedVal");
-                            if(countryId=='1'){
-                              for(int i=0 ;i<newTaipei_district.getnewTaipei_districtlistLength();i++){
-                                newTaipei_district.getnewTaipei_districtlist()[i][1]=false;
-                              }
-                            }
-                            if(countryId=='2'){
-                              for(int i=0 ;i<taipei_district.gettaipei_districtLength();i++){
-                                taipei_district.gettaipei_district()[i][1]=false;
-                              }
-                            }
-                            setState(() {});
-                        },
+                        this.countryId = onChangedVal;
+                        print("Selected County:$onChangedVal");
+                        if(countryId=='1'){
+                          for(int i=0 ;i<newTaipei_district.getnewTaipei_districtlistLength();i++){
+                            newTaipei_district.getnewTaipei_districtlist()[i][1]=false;
+                          }
+                        }
+                        if(countryId=='2'){
+                          for(int i=0 ;i<taipei_district.gettaipei_districtLength();i++){
+                            taipei_district.gettaipei_district()[i][1]=false;
+                          }
+                        }
+                        setState(() {});
+                      },
                           (onChangedVal){
                         if(onChangedVal==null){
                           return"please select County";}
@@ -406,7 +399,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
               ),
               Container(
                   color: Color.fromRGBO(236,240,241,1),
-                  height: 150,
+                  height: 200,
                   padding: EdgeInsets.only(left: 15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -448,6 +441,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
           ),
         ),
       ),
+    )
     );
   }
 }
