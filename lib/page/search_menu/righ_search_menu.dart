@@ -6,6 +6,8 @@ import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:live_in/page/search_menu/data.dart';
 import 'package:http/http.dart' as http;
 
+import '../searchPage.dart';
+
 //work
 
 class righ_search_menu extends StatefulWidget {
@@ -14,6 +16,7 @@ class righ_search_menu extends StatefulWidget {
   @override
   State<righ_search_menu> createState() => _righ_search_menuState();
 }
+
 
 class _righ_search_menuState extends State<righ_search_menu> {
   List<dynamic> GetDistrictData(List<dynamic> listTaipei,List<dynamic> listNewTaipei){
@@ -44,26 +47,8 @@ class _righ_search_menuState extends State<righ_search_menu> {
     return  Returnlist;
   }
 
-  static var Getrightdata=[];
-  List<dynamic> countries=[
-    {"id":1,"name":"台北"},
-    {"id":2,"name":"新北"},];
-  List<dynamic> min_salary=[
-    {"id":1,"name":"月薪3萬up"},
-    {"id":2,"name":"月薪4萬up"},
-    {"id":3,"name":"月薪5萬up"},];
-  List<dynamic> job_position=[
-    ["軟體工程師",false],
-    ["演算法工程師",false],
-    ["前端工程師",false],
-    ["後端工程師",false]];
-  List<dynamic> work_hour=[
-    ["日班",false],
-    ["晚班",false],
-    ["大夜班",false],
-    ["假日班",false],
-    ["輪班",false],
-    ["不須輪班",false]];
+
+
 
   receiveData() async {
     var client = http.Client();
@@ -99,6 +84,13 @@ class _righ_search_menuState extends State<righ_search_menu> {
       print(Getrightdata);
     } catch (e) {
       print(e);
+      Fluttertoast.showToast(
+          backgroundColor: Colors.deepOrangeAccent,
+          msg: "錯誤，${e}，目前工作地址有誤",                 // message
+          toastLength: Toast.LENGTH_LONG, // length
+          gravity: ToastGravity.CENTER,    // location
+          timeInSecForIosWeb: 3            // duration
+      );
     } finally {
       client.close();// 在不需要時被關閉
     }
@@ -182,7 +174,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
                       context,
                       "Select County",
                       this.countryId,
-                      this.countries,
+                      countries,
                           (onChangedVal){
                         this.countryId = onChangedVal;
                         print("Selected County:$onChangedVal");
@@ -306,6 +298,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
                           break;
                       }
                     }else{
+                      Getrightdata=[];//清除前一次資料
                       receiveData();
                       Navigator.pop(context);
                     }
@@ -337,7 +330,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
                       context,
                       "Select Salary",
                       this.salaryId,
-                      this.min_salary,
+                      min_salary,
                           (onChangedVal){
                         this.salaryId = onChangedVal;
                         print("Selected Salary:$onChangedVal");

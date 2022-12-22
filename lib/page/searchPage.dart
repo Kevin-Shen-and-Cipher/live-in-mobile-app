@@ -6,6 +6,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'search_menu/searchPage_DataDetails.dart';
 import 'dart:convert';
 
+var Getrightdata=[];
+var Getleftdata=[];
+
 class SearchPage extends StatefulWidget {
 
   const SearchPage({Key? key}) : super(key: key);
@@ -17,7 +20,6 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
-    super.initState();
     //print("initState");
   }
   int drawerIndex=0;
@@ -61,10 +63,19 @@ class _SearchPageState extends State<SearchPage> {
           )
         ],
       ),
-      drawer: left_search_menu(),
-      endDrawer: righ_search_menu(),
-      body: Center(
-        child: buildJob(),
+      // drawer: left_search_menu(),
+      // endDrawer: righ_search_menu(),
+      body: Container(
+        child: Stack(
+          children: [
+            if(Getleftdata.isEmpty&&Getrightdata.isEmpty)
+              Center(
+                child: Image.asset('assets/turtle/turtle5.png'),
+
+              ),
+            buildJob(),
+          ],
+        )
       ),
     );
   }

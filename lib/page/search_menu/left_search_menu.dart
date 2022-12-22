@@ -6,7 +6,9 @@ import 'package:snippet_coder_utils/FormHelper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
-var Getleftdata=[];
+import '../searchPage.dart';
+
+
 
 class left_search_menu extends StatefulWidget {
   const left_search_menu({Key? key}) : super(key: key);
@@ -15,8 +17,6 @@ class left_search_menu extends StatefulWidget {
 }
 
 class _left_search_menuState extends State<left_search_menu> {
-
-  deactivate(){}
 
   List<dynamic> GetDistrictData(List<dynamic> listTaipei,List<dynamic> listNewTaipei){
     List<dynamic> Returnlist=[];
@@ -72,20 +72,28 @@ class _left_search_menuState extends State<left_search_menu> {
       if (response.statusCode != 200) {// 確保請求成功
         throw Exception('receiveData請求失敗');
       }
+
       var data = json.decode(utf8.decode(response.bodyBytes));
       print("---資料獲取成功----");
       Navigator.pop(context);
-
 
       for(int i=0;i<data.length;i++){
         Getleftdata.add(new Apartment(new Map<String, dynamic>.from(data[i])));
       }
     } catch (e) {
       print(e);
+      Fluttertoast.showToast(
+          backgroundColor: Colors.deepOrangeAccent,
+          msg: "錯誤，${e}，目前工作地址有誤",                 // message
+          toastLength: Toast.LENGTH_LONG, // length
+          gravity: ToastGravity.CENTER,    // location
+          timeInSecForIosWeb: 3            // duration
+      );
     } finally {
       client.close();// 在不需要時被關閉
     }
   }
+
 
   taipei taipei_district=new taipei();
   newTaipei newTaipei_district=new newTaipei();
@@ -97,7 +105,10 @@ class _left_search_menuState extends State<left_search_menu> {
   int max=1<<32;
 
   @override
-  void initState() {super.initState();}
+  void initState() {
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -578,4 +589,6 @@ class _left_search_menuState extends State<left_search_menu> {
 
 
   }
+
+
 }

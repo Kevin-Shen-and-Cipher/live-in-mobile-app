@@ -88,7 +88,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-#    - lib/image
+    - assets/turtle/turtle3.png
+    - assets/turtle/turtle5.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

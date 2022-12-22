@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
 
 class taipei {
   List<dynamic> _taipei_district=[
@@ -16,7 +13,7 @@ class taipei {
   }
 }
 class newTaipei{
-  List<dynamic> newTaipei_districtlist=[
+  List<dynamic> _newTaipei_districtlist=[
     ["板橋",false],["三重",false], ["淡水",false], ["中和",false],
     ["永和",false],["新莊",false],["新店",false], ["汐止",false],
     ["林口",false],["蘆洲",false],["土城",false],["三峽",false],
@@ -27,10 +24,10 @@ class newTaipei{
     ["石門",false],];
 
   List getnewTaipei_districtlist(){
-    return newTaipei_districtlist;
+    return _newTaipei_districtlist;
   }
   int getnewTaipei_districtlistLength(){
-    return newTaipei_districtlist.length;
+    return _newTaipei_districtlist.length;
   }
 }
 
@@ -74,44 +71,6 @@ class Apartment{
 
  }
 
-
-
-
-class Job{
-  final String address;
-  final List district;
-  final String min_price;
-  final String max_price;
-  final List rent_type;
-  final List apartment_type;
-  final List room_type;
-  final List restrict;
-  final List device;
-
-  Job(this.address,this.district,this.min_price,this.max_price,this.rent_type,this.apartment_type,this.room_type,this.restrict,this.device);
-  Job.fromJson(Map<String, dynamic> json)
-      : address =json['address'],
-        district = json['district'],
-        min_price = json['min_price'],
-        max_price = json['max_price'],
-        rent_type = json['rent_type'],
-        apartment_type = json['apartment_type'],
-        room_type = json['room_type'],
-        restrict = json['restrict'],
-        device = json['device'];
-  Map<String, dynamic> toJson() => {
-    'address': address,
-    'district': district,
-    'min_price': min_price,
-    'max_price': max_price,
-    'rent_type': rent_type,
-    'apartment_type': apartment_type,
-    'room_type': room_type,
-    'restrict': restrict,
-    'device': device,
-  };
-
-}
 List<dynamic> countries = [
   {"pk": 1, "name": "台北"},
   {"pk": 2, "name": "新北"}];
@@ -154,3 +113,21 @@ List<dynamic> restrict = [
   ["限男", false],
   ["限女", false],
   ["排除頂樓加蓋", false]];
+
+
+List<dynamic> min_salary=[
+  {"id":1,"name":"月薪3萬up"},
+  {"id":2,"name":"月薪4萬up"},
+  {"id":3,"name":"月薪5萬up"},];
+List<dynamic> job_position=[
+  ["軟體工程師",false],
+  ["演算法工程師",false],
+  ["前端工程師",false],
+  ["後端工程師",false]];
+List<dynamic> work_hour=[
+  ["日班",false],
+  ["晚班",false],
+  ["大夜班",false],
+  ["假日班",false],
+  ["輪班",false],
+  ["不須輪班",false]];
