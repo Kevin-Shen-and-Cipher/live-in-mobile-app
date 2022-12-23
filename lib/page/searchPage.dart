@@ -117,7 +117,10 @@ Widget buildJob() => ListView.builder(
                   ),
                     onPressed: ()async{
                     Uri url = Uri.parse(apartment.getUrl());
-                    if (!await launchUrl(url)) {
+                    if (await canLaunch(url.toString())) {
+                      await launch(url.toString());
+                    } else {
+                      print(apartment.getUrl());
                       throw 'Could not launch $url';
                     }
                     },
@@ -133,3 +136,10 @@ Widget buildJob() => ListView.builder(
         );
       },
     );
+
+Future<dynamic>_launchUrl(String url) async {
+  Uri _url = Uri.parse(url);
+  if (!await launchUrl(_url)) {
+    throw 'Could not launch $_url';
+  }
+}
