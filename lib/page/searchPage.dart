@@ -22,7 +22,8 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     //print("initState");
   }
-  late var drawerIndex;
+  int drawerIndex=0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +40,7 @@ class _SearchPageState extends State<SearchPage> {
               onPressed: () {
                 //Scaffold.of(context).openDrawer();
                 drawerIndex=1;
+                Getrightdata=[];
                 Navigator.push(context,MaterialPageRoute(
                     builder: (BuildContext contest){
                   return left_search_menu();
@@ -54,6 +56,7 @@ class _SearchPageState extends State<SearchPage> {
                 icon: Icon(Icons.work),
                 onPressed: () {
                   //Scaffold.of(context).openEndDrawer();
+                  Getleftdata=[];
                   drawerIndex=2;
                   Navigator.push(context,MaterialPageRoute(
                       builder: (BuildContext contest){
@@ -74,20 +77,76 @@ class _SearchPageState extends State<SearchPage> {
               Center(
                 child: Image.asset('assets/turtle/turtle5.png'),
               ),
-            buildJob(),
+            if(drawerIndex==1)
+              buildApartment(),
+            Text("1"),
+            if(drawerIndex==2)
+              buildJob(),
           ],
         )
       ),
     );
   }
 }
-
 Widget buildJob() => ListView.builder(
+
+  itemCount: Getrightdata.length,
+  itemBuilder: (context, index) {
+    final job = Getrightdata[index];
+
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+        child: Column( //用Column讓兩排文字可以垂直排列
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 8.0), //兩排文字間距用透明的box隔開
+              Text(job.getName(),style:TextStyle(fontSize: 21),),
+              ListTile(
+                subtitle: Text(job.getDistrict()["city"]["name"]+" "+job.getDistrict()["name"],style:TextStyle(fontSize: 18),textAlign: TextAlign.start,),
+                title: Text(job.getAddress(),style:TextStyle(fontSize: 19)),
+              ),
+              Row(
+                children: [
+                  Text("職位："+job.getJob_position()["name"],style:TextStyle(fontSize: 14),),
+                  SizedBox(width: 15,),
+                  Text("工作時段："+job.getWorking_hour()["name"],style:TextStyle(fontSize: 14),),
+                  SizedBox(width: 15,),
+                  Text("需求年資："+job.getTenure().toString(),style:TextStyle(fontSize: 14),),
+                ],
+              ),
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueGrey,
+                      onPrimary: Colors.white, // foreground
+                    ),
+                    onPressed: ()async{
+                      Uri url = Uri.parse(job.getUrl());
+                      if (!await launchUrl(url)) {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                    child: Text('前往查看'),
+                  ),
+                  SizedBox(width: 120,),
+                  Text("薪水:"+job.getSalary().toString(),style:TextStyle(color: Colors.redAccent,fontSize: 20,fontWeight: FontWeight.bold)),
+                ],
+              )
+            ]
+        ),
+      ),
+    );
+  },
+);
+
+
+Widget buildApartment() => ListView.builder(
 
       itemCount: Getleftdata.length,
       itemBuilder: (context, index) {
         final apartment = Getleftdata[index];
-        //Getleftdata=[];
 
         return Card(
           child: Padding(
@@ -98,8 +157,8 @@ Widget buildJob() => ListView.builder(
               SizedBox(height: 8.0), //兩排文字間距用透明的box隔開
               Text(apartment.getTitle(),style:TextStyle(fontSize: 21),),
               ListTile(
-                title: Text(apartment.getAdress(),style:TextStyle(fontSize: 19)),
                 subtitle: Text(apartment.getDistrict()["city"]["name"]+" "+apartment.getDistrict()["name"],style:TextStyle(fontSize: 18),textAlign: TextAlign.start,),
+                title: Text(apartment.getAddress(),style:TextStyle(fontSize: 19)),
               ),
               Row(
                 children: [

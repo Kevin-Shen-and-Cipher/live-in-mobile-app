@@ -79,9 +79,8 @@ class _righ_search_menuState extends State<righ_search_menu> {
       Navigator.pop(context);
 
       for(int i=0;i<data.length;i++){
-        Getrightdata.add(new Job(new Map<String, dynamic>.from(data[i])));
+        Getrightdata.add(new EngineerJob(new Map<String, dynamic>.from(data[i])));
       }
-
 
 
     } catch (e) {
@@ -114,7 +113,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
       width: 350,
       child:Scaffold(
         appBar:AppBar(
-          title: Text('找房子',),
+          title: Text('找工作',),
           centerTitle: true,
           backgroundColor: Color.fromRGBO(147,197,253,1),
         ),

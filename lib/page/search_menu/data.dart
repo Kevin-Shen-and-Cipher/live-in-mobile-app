@@ -31,23 +31,28 @@ class newTaipei{
   }
 }
 
-class Job{
+class EngineerJob{
   String? _address;
   List<dynamic>? _benefit;
   Map<String ,dynamic>? _district;
   Map<String ,dynamic>? _job_position;
   String? _name;
   int? _salary;
+  int? _tenure;
   String? _url;
+  Map<String ,dynamic>? _working_hour;
 
-  Job(Map<String ,dynamic> data){
+  EngineerJob(Map<String ,dynamic> data){
     this._address=data["address"];
     this._benefit=data["benefit"];
     this._district=data["district"];
     this._job_position=data["job_position"];
     this._name=data["name"];
     this._salary=data["salary"];
+    this._tenure=data["tenure"];
     this._url=data["url"];
+    this._working_hour=data["working_hour"];
+  }
 
     String?               getAddress(){return this._address;}
     List<dynamic>?        getBenefit(){return this._benefit;}
@@ -55,9 +60,10 @@ class Job{
     Map<String ,dynamic>? getJob_position(){return this._job_position;}
     String?               getName(){return this._name;}
     int?                  getSalary(){return this._salary;}
+    int?                  getTenure(){return this._tenure;}
     String?               getUrl(){return this._url;}
+    Map<String ,dynamic>? getWorking_hour(){return this._working_hour;}
 
-  }
 
 }
 
@@ -87,7 +93,7 @@ class Apartment{
     this._surroundingFacility=data["surroundingfacility"];
     this._url=data["url"];
   }
-   String?                getAdress(){return _address;}
+   String?                getAddress(){return _address;}
    Map <String ,dynamic>? getApartmentType(){return _apartment_type;}
    List<dynamic>?         getDevice(){return _device;}
    Map <String ,dynamic>? getDistrict(){return _district;}
