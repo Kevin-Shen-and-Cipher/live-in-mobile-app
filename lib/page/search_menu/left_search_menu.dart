@@ -321,12 +321,10 @@ class _left_search_menuState extends State<left_search_menu> {
                         }else{
                           Getleftdata=[];//清除前一次資料
                           receiveData();
-
                         }
                       },
                     ),
                   ),//收尋
-
                   Container(
                     height: 100,
                     decoration: const BoxDecoration(
