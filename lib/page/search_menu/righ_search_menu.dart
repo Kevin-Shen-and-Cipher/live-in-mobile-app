@@ -74,14 +74,16 @@ class _righ_search_menuState extends State<righ_search_menu> {
 
         throw Exception('receiveData請求失敗');
       }
-      final data = json.decode(utf8.decode(response.bodyBytes));
+      var data = json.decode(utf8.decode(response.bodyBytes));
+      print("---資料獲取成功----");
+      Navigator.pop(context);
 
-      // json.decode(response.body);
-      print("---分隔線----");
-      print(data);
-      Getrightdata.add(data);
-      print("---分隔線----");
-      print(Getrightdata);
+      for(int i=0;i<data.length;i++){
+        Getrightdata.add(new Job(new Map<String, dynamic>.from(data[i])));
+      }
+
+
+
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
@@ -175,30 +177,27 @@ class _righ_search_menuState extends State<righ_search_menu> {
                       "Select County",
                       this.countryId,
                       countries,
-                          (onChangedVal){
+                          (onChangedVal) {
                         this.countryId = onChangedVal;
                         print("Selected County:$onChangedVal");
                         if(countryId=='1'){
                           for(int i=0 ;i<newTaipei_district.getnewTaipei_districtlistLength();i++){
                             newTaipei_district.getnewTaipei_districtlist()[i][1]=false;
-                          }
-                        }
+                          }}
                         if(countryId=='2'){
                           for(int i=0 ;i<taipei_district.gettaipei_districtLength();i++){
                             taipei_district.gettaipei_district()[i][1]=false;
-                          }
-                        }
+                          }}
                         setState(() {});
                       },
-                          (onChangedVal){
-                        if(onChangedVal==null){
-                          return"please select County";}
+                          (onChangedVal) {
+                        if (onChangedVal == null) {
+                          return "please select County";}
                         return null;},
-                      borderColor:Theme.of(context).primaryColor,
-                      borderFocusColor:Theme.of(context).primaryColor,
+                      borderColor: Theme.of(context).primaryColor,
+                      borderFocusColor: Theme.of(context).primaryColor,
                       borderRadius: 10,
-                      //optionValue: "id",
-                      //optionLabel: "name"
+                      optionValue: "pk",
                     ),
                   ],
                 ),
@@ -300,7 +299,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
                     }else{
                       Getrightdata=[];//清除前一次資料
                       receiveData();
-                      Navigator.pop(context);
+
                     }
                   },
                 ),

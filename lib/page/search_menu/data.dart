@@ -31,6 +31,36 @@ class newTaipei{
   }
 }
 
+class Job{
+  String? _address;
+  List<dynamic>? _benefit;
+  Map<String ,dynamic>? _district;
+  Map<String ,dynamic>? _job_position;
+  String? _name;
+  int? _salary;
+  String? _url;
+
+  Job(Map<String ,dynamic> data){
+    this._address=data["address"];
+    this._benefit=data["benefit"];
+    this._district=data["district"];
+    this._job_position=data["job_position"];
+    this._name=data["name"];
+    this._salary=data["salary"];
+    this._url=data["url"];
+
+    String?               getAddress(){return this._address;}
+    List<dynamic>?        getBenefit(){return this._benefit;}
+    Map<String ,dynamic>? getDistrict(){return this._district;}
+    Map<String ,dynamic>? getJob_position(){return this._job_position;}
+    String?               getName(){return this._name;}
+    int?                  getSalary(){return this._salary;}
+    String?               getUrl(){return this._url;}
+
+  }
+
+}
+
 class Apartment{
    String? _address;
    Map <String ,dynamic>? _apartment_type;

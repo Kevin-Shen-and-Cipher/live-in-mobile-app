@@ -74,12 +74,16 @@ class _left_search_menuState extends State<left_search_menu> {
       }
 
       var data = json.decode(utf8.decode(response.bodyBytes));
+
       print("---資料獲取成功----");
       Navigator.pop(context);
+      print(data.runtimeType);
+      print(data[0].runtimeType);
 
       for(int i=0;i<data.length;i++){
         Getleftdata.add(new Apartment(new Map<String, dynamic>.from(data[i])));
       }
+
     } catch (e) {
       print(e);
       Fluttertoast.showToast(

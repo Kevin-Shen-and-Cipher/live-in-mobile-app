@@ -22,7 +22,7 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     //print("initState");
   }
-  int drawerIndex=0;
+  late var drawerIndex;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +38,7 @@ class _SearchPageState extends State<SearchPage> {
               icon: Icon(Icons.house),
               onPressed: () {
                 //Scaffold.of(context).openDrawer();
+                drawerIndex=1;
                 Navigator.push(context,MaterialPageRoute(
                     builder: (BuildContext contest){
                   return left_search_menu();
@@ -53,6 +54,7 @@ class _SearchPageState extends State<SearchPage> {
                 icon: Icon(Icons.work),
                 onPressed: () {
                   //Scaffold.of(context).openEndDrawer();
+                  drawerIndex=2;
                   Navigator.push(context,MaterialPageRoute(
                       builder: (BuildContext contest){
                         return righ_search_menu();
@@ -71,7 +73,6 @@ class _SearchPageState extends State<SearchPage> {
             if(Getleftdata.isEmpty&&Getrightdata.isEmpty)
               Center(
                 child: Image.asset('assets/turtle/turtle5.png'),
-
               ),
             buildJob(),
           ],
@@ -86,6 +87,7 @@ Widget buildJob() => ListView.builder(
       itemCount: Getleftdata.length,
       itemBuilder: (context, index) {
         final apartment = Getleftdata[index];
+        //Getleftdata=[];
 
         return Card(
           child: Padding(
