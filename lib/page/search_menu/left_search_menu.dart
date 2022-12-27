@@ -98,7 +98,6 @@ class _left_search_menuState extends State<left_search_menu> {
     }
   }
 
-
   taipei taipei_district=new taipei();
   newTaipei newTaipei_district=new newTaipei();
   String? countryId;
@@ -271,7 +270,7 @@ class _left_search_menuState extends State<left_search_menu> {
                         backgroundColor: Colors.blueGrey,
                       ),
                       child: const Text(
-                        '收尋/Search',
+                        '搜尋/Search',
                         style: TextStyle(
                           fontSize: 20, // 大小
                           fontWeight: FontWeight.bold,

@@ -17,7 +17,6 @@ class righ_search_menu extends StatefulWidget {
   State<righ_search_menu> createState() => _righ_search_menuState();
 }
 
-
 class _righ_search_menuState extends State<righ_search_menu> {
   List<dynamic> GetDistrictData(List<dynamic> listTaipei,List<dynamic> listNewTaipei){
     List<dynamic> Returnlist=[];
@@ -47,9 +46,6 @@ class _righ_search_menuState extends State<righ_search_menu> {
     return  Returnlist;
   }
 
-
-
-
   receiveData() async {
     var client = http.Client();
 
@@ -63,7 +59,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
           'district': GetDistrictData(taipei_district.gettaipei_district(),newTaipei_district.getnewTaipei_districtlist()),
           'min_salary': salary,
           'job_position': GetAllData(job_position),
-          'work_hour': GetAllData(work_hour),
+          'working_hour': GetAllData(work_hour),
         }
     );
     print(url);
@@ -82,7 +78,6 @@ class _righ_search_menuState extends State<righ_search_menu> {
         Getrightdata.add(new EngineerJob(new Map<String, dynamic>.from(data[i])));
       }
 
-
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
@@ -100,7 +95,7 @@ class _righ_search_menuState extends State<righ_search_menu> {
   String? address;
   String? countryId;
   String? salaryId;
-  String? salary;
+  String salary='';
 
   taipei taipei_district=new taipei();
   newTaipei newTaipei_district=new newTaipei();
@@ -265,12 +260,23 @@ class _righ_search_menuState extends State<righ_search_menu> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueGrey,),
-                  child: const Text('收尋',
+                  child: const Text('搜尋',
                     style: TextStyle(
                       fontSize: 20,                          // 大小
                       fontWeight: FontWeight.bold,),
                   ),
                   onPressed: () {
+                    switch(salaryId){
+                      case '1':
+                        salary="30000";
+                        break;
+                      case'2':
+                        salary="40000";
+                        break;
+                      case'3':
+                        salary="50000";
+                        break;
+                    }
                     if(address==null|| (GetAllData(taipei_district.gettaipei_district()).isEmpty
                         &&GetAllData(newTaipei_district.getnewTaipei_districtlist()).isEmpty)){
                       print("error，address or district is null $address");
@@ -281,20 +287,8 @@ class _righ_search_menuState extends State<righ_search_menu> {
                           gravity: ToastGravity.CENTER,    // location
                           timeInSecForIosWeb: 3            // duration
                       );
-                      switch(salaryId){
-                        case '1':
-                          salary="0";
-                          break;
-                        case'2':
-                          salary="1";
-                          break;
-                        case'3':
-                          salary="2";
-                          break;
-                        case'4':
-                          salary="3";
-                          break;
-                      }
+
+                      print(salary);
                     }else{
                       Getrightdata=[];//清除前一次資料
                       receiveData();

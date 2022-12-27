@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:live_in/page/search_menu/data.dart';
 import 'package:live_in/page/search_menu/left_search_menu.dart';
@@ -79,7 +80,6 @@ class _SearchPageState extends State<SearchPage> {
               ),
             if(drawerIndex==1)
               buildApartment(),
-            Text("1"),
             if(drawerIndex==2)
               buildJob(),
           ],
@@ -123,9 +123,9 @@ Widget buildJob() => ListView.builder(
                       onPrimary: Colors.white, // foreground
                     ),
                     onPressed: ()async{
-                      Uri url = Uri.parse(job.getUrl());
-                      if (!await launchUrl(url)) {
-                        throw 'Could not launch $url';
+                      //Uri url = Uri.parse(job.getUrl());
+                      if (!await launchUrl(Uri.parse(job.getUrl()))) {
+                        throw 'Could not launch ${Uri.parse(job.getUrl())}';
                       }
                     },
                     child: Text('前往查看'),
@@ -140,7 +140,6 @@ Widget buildJob() => ListView.builder(
     );
   },
 );
-
 
 Widget buildApartment() => ListView.builder(
 
@@ -177,9 +176,9 @@ Widget buildApartment() => ListView.builder(
                     onPrimary: Colors.white, // foreground
                   ),
                     onPressed: ()async{
-                    Uri url = Uri.parse(apartment.getUrl());
-                    if (!await launchUrl(url)) {
-                      throw 'Could not launch $url';
+                    //Uri url = Uri.parse(apartment.getUrl());
+                    if (!await launchUrl(Uri.parse(apartment.getUrl()))) {
+                      throw 'Could not launch ${Uri.parse(apartment.getUrl())})';
                     }
                     },
                   child: Text('前往查看'),
