@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:live_in/page/infoPage.dart';
 import 'page/homePage.dart';
 import 'page/searchPage.dart';
 
-void main()=>runApp(MaterialApp(title: 'app',
-  home: new MyApp(),
-));
+Future<void> main() async{
+  await dotenv.load(
+
+  );
+  runApp(MaterialApp(title: 'app', home: new MyApp(),));
+}
 
 // MyApp
 class MyApp extends StatelessWidget {

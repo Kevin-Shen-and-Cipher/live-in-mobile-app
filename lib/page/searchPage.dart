@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:live_in/page/search_menu/data.dart';
 import 'package:live_in/page/search_menu/left_search_menu.dart';
 import 'package:live_in/page/search_menu/righ_search_menu.dart';
@@ -74,6 +75,9 @@ class _SearchPageState extends State<SearchPage> {
       body: Container(
         child: Stack(
           children: [
+
+            //Text(dotenv.env['API_URL'] ?? 'API_URL not found'),
+
             if(Getleftdata.isEmpty&&Getrightdata.isEmpty)
               Center(
                 child: Image.asset('assets/turtle/turtle5.png'),
