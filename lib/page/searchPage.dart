@@ -1,12 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:live_in/page/search_menu/data.dart';
 import 'package:live_in/page/search_menu/left_search_menu.dart';
 import 'package:live_in/page/search_menu/righ_search_menu.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'search_menu/searchPage_DataDetails.dart';
-import 'dart:convert';
+
 
 var Getrightdata=[];
 var Getleftdata=[];

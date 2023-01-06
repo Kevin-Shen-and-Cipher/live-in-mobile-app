@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:live_in/page/turtle.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -35,6 +36,19 @@ class infoPage extends StatelessWidget {
                 ),
                 onPressed: () =>showAboutUs(context),
                 child: Text('About us'),
+              ) ,
+            ),
+            Container(
+              height: 100,
+              padding: EdgeInsets.only(top: 60,left: 80,right: 80,bottom: 0),
+              child:ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueGrey,
+                  onPrimary: Colors.white, // foreground
+                ),
+                onPressed: () =>Navigator.push(
+                    context,MaterialPageRoute(builder: (context) => turtle())),
+                child: Text('pet'),
               ) ,
             ),
             Container(
